@@ -242,3 +242,9 @@ export { default as Sparkline } from './components/ui/Sparkline.svelte';
 
 // ProviderIcon
 export { default as ProviderIcon } from './components/ui/ProviderIcon.svelte';
+
+// RichEditor — full-featured TipTap editor (wiki, issues, comments)
+export { default as RichEditor } from './components/ui/editor/RichEditor.svelte';
+
+// CostDisplay — animated cost/currency display component
+export { default as CostDisplay } from './components/ui/CostDisplay.svelte';
