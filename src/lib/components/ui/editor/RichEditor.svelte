@@ -34,6 +34,7 @@
     content?: Record<string, unknown> | null;
     placeholder?: string;
     mode?: Mode;
+    bordered?: boolean;
     mentionsUrl?: string | null;
     onUpdate?: (json: Record<string, unknown>, html: string) => void;
     onSubmit?: () => void;
@@ -45,6 +46,7 @@
     content = null,
     placeholder = 'Write something…',
     mode = 'standard',
+    bordered = true,
     mentionsUrl = null,
     onUpdate,
     onSubmit,
@@ -196,6 +198,7 @@
 <div
   class="rich-editor {className}"
   data-mode={mode}
+  data-bordered={bordered}
   onkeydown={(e) => {
     if (onSubmit && (e.metaKey || e.ctrlKey) && e.key === 'Enter') {
       e.preventDefault();
@@ -325,9 +328,15 @@
     overflow: hidden;
     background: var(--background);
   }
-  .rich-editor[data-mode="minimal"] {
+  .rich-editor[data-mode="minimal"],
+  .rich-editor[data-bordered="false"] {
     border: none;
     border-radius: 0;
+    background: transparent;
+  }
+  .rich-editor[data-bordered="false"] .re-toolbar {
+    border-bottom: 1px solid var(--border);
+    background: transparent;
   }
 
   /* ── Toolbar ── */

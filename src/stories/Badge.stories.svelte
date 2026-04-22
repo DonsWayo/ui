@@ -30,3 +30,14 @@
 <Story name="Outline">
 	<Badge variant="outline">Outline</Badge>
 </Story>
+
+<Story name="All Variants">
+	{#snippet children(args)}
+		<div class="flex flex-row gap-2 items-center">
+			<Badge variant="default">Default</Badge>
+			<Badge variant="secondary">Secondary</Badge>
+			<Badge variant="destructive">Destructive</Badge>
+			<Badge variant="outline">Outline</Badge>
+		</div>
+	{/snippet}
+</Story>

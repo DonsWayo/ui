@@ -248,3 +248,50 @@ export { default as RichEditor } from './components/ui/editor/RichEditor.svelte'
 
 // CostDisplay — animated cost/currency display component
 export { default as CostDisplay } from './components/ui/CostDisplay.svelte';
+
+// StatusPill
+export { default as StatusPill } from './components/ui/StatusPill.svelte';
+
+// PageHeader
+export { default as PageHeader } from './components/ui/PageHeader.svelte';
+
+// Table
+export {
+	Table,
+	TableHeader,
+	TableBody,
+	TableRow,
+	TableHead,
+	TableCell,
+	TableCaption,
+} from './components/ui/table/index.js';
+
+// Alert
+export { default as Alert } from './components/ui/Alert.svelte';
+
+// ListCard
+export { default as ListCard } from './components/ui/ListCard.svelte';
+
+// StatCard
+export { default as StatCard } from './components/ui/StatCard.svelte';
+
+// BranchPill
+export { default as BranchPill } from './components/ui/BranchPill.svelte';
+
+// CommentPill
+export { default as CommentPill } from './components/ui/CommentPill.svelte';
+
+// PermissionChips — Nucel-App permission badges
+export { default as PermissionChips } from './components/ui/PermissionChips.svelte';
+
+// AppCard — Nucel-App row card (marketplace, installed apps, owned apps)
+export { default as AppCard } from './components/ui/AppCard.svelte';
+
+// Section
+export { default as Section } from './components/ui/Section.svelte';
+
+// SectionTitle
+export { default as SectionTitle } from './components/ui/SectionTitle.svelte';
+
+// FormField
+export { default as FormField } from './components/ui/FormField.svelte';
