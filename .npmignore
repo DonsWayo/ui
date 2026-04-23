@@ -1,0 +1,7 @@
+*.test.ts
+*.spec.ts
+src/tests/
+src/stories/
+storybook-static/
+.storybook/
+vitest.config.ts
