@@ -19,25 +19,25 @@
 	});
 </script>
 
-<Story name="0%" args={{ spent: 0, limit: 100 }}>
+<Story name="Empty" args={{ spent: 0, limit: 100 }}>
 	{#snippet children(args)}
 		<ProgressRing {...args} />
 	{/snippet}
 </Story>
 
-<Story name="25%" args={{ spent: 25, limit: 100 }}>
+<Story name="Quarter" args={{ spent: 25, limit: 100 }}>
 	{#snippet children(args)}
 		<ProgressRing {...args} />
 	{/snippet}
 </Story>
 
-<Story name="75%" args={{ spent: 75, limit: 100 }}>
+<Story name="ThreeQuarters" args={{ spent: 75, limit: 100 }}>
 	{#snippet children(args)}
 		<ProgressRing {...args} />
 	{/snippet}
 </Story>
 
-<Story name="100%" args={{ spent: 100, limit: 100 }}>
+<Story name="Full" args={{ spent: 100, limit: 100 }}>
 	{#snippet children(args)}
 		<ProgressRing {...args} />
 	{/snippet}

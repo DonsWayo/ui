@@ -3,7 +3,7 @@
 
 	let {
 		ref = $bindable(null),
-		data,
+		data = [] as number[],
 		color = 'stroke-primary',
 		fillColor = 'fill-primary/10',
 		width = 80,

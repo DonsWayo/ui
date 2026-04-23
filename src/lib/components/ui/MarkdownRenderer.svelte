@@ -2,10 +2,10 @@
 	import { marked } from 'marked';
 	import DOMPurify from 'dompurify';
 
-	let { content }: { content: string } = $props();
+	let { content = '' }: { content?: string } = $props();
 
 	let html = $derived(
-		DOMPurify.sanitize(marked.parse(content, { gfm: true, breaks: false }) as string),
+		content ? DOMPurify.sanitize(marked.parse(content, { gfm: true, breaks: false }) as string) : '',
 	);
 </script>
 

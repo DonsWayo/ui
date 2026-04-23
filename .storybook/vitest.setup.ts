@@ -1,6 +1,1 @@
-import { setProjectAnnotations } from '@storybook/sveltekit';
-import * as previewAnnotations from './preview';
-
-const projectAnnotations = setProjectAnnotations(previewAnnotations);
-
-beforeAll(projectAnnotations.beforeAll);
+// Storybook 10.3+ applies preview annotations automatically via @storybook/addon-vitest.
