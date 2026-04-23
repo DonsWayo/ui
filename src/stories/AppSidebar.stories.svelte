@@ -5,7 +5,6 @@
 
 	const { Story } = defineMeta({
 		title: 'Layout/AppSidebar',
-		component: AppSidebar,
 		tags: ['autodocs'],
 	});
 </script>

@@ -5,7 +5,6 @@
 
 	const { Story } = defineMeta({
 		title: 'Layout/NavItem',
-		component: NavItem,
 		tags: ['autodocs'],
 	});
 </script>
