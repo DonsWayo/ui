@@ -295,3 +295,9 @@ export { default as SectionTitle } from './components/ui/SectionTitle.svelte';
 
 // FormField
 export { default as FormField } from './components/ui/FormField.svelte';
+
+// Layout
+export { default as AppShell } from './components/ui/AppShell.svelte';
+export { default as AppSidebar } from './components/ui/AppSidebar.svelte';
+export { default as NavItem } from './components/ui/NavItem.svelte';
+export { default as NavSection } from './components/ui/NavSection.svelte';
