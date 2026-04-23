@@ -9,20 +9,20 @@
 	});
 </script>
 
-<Story name="Default">
+<Story name="Default" args={{ name: 'main' }}>
 	{#snippet children(args)}
-		<BranchPill name="main" />
+		<BranchPill {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Small">
+<Story name="Small" args={{ size: 'xs', name: 'feature/auth' }}>
 	{#snippet children(args)}
-		<BranchPill size="xs" name="feature/auth" />
+		<BranchPill {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Long Branch Name">
+<Story name="Long Branch Name" args={{ name: 'fix/auth-middleware-session-token-storage' }}>
 	{#snippet children(args)}
-		<BranchPill name="fix/auth-middleware-session-token-storage" />
+		<BranchPill {...args} />
 	{/snippet}
 </Story>

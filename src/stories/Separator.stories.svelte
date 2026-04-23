@@ -9,7 +9,7 @@
 	});
 </script>
 
-<Story name="Horizontal">
+<Story name="Horizontal" args={{}}>
 	{#snippet children(args)}
 		<div class="flex flex-col gap-2 w-48">
 			<span class="text-sm">Above</span>
@@ -19,7 +19,7 @@
 	{/snippet}
 </Story>
 
-<Story name="Vertical">
+<Story name="Vertical" args={{}}>
 	{#snippet children(args)}
 		<div class="flex flex-row items-center gap-2">
 			<span class="text-sm">Left</span>

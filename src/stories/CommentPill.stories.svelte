@@ -9,20 +9,20 @@
 	});
 </script>
 
-<Story name="With Count">
+<Story name="With Count" args={{ count: 5 }}>
 	{#snippet children(args)}
-		<CommentPill count={5} />
+		<CommentPill {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Zero (hidden)" parameters={{ docs: { description: { story: 'count=0 renders nothing — the component is intentionally invisible at zero.' } } }}>
+<Story name="Zero (hidden)" args={{ count: 0 }} parameters={{ docs: { description: { story: 'count=0 renders nothing — the component is intentionally invisible at zero.' } } }}>
 	{#snippet children(args)}
-		<CommentPill count={0} />
+		<CommentPill {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Large Count">
+<Story name="Large Count" args={{ count: 42 }}>
 	{#snippet children(args)}
-		<CommentPill count={42} />
+		<CommentPill {...args} />
 	{/snippet}
 </Story>

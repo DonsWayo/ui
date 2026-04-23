@@ -9,7 +9,7 @@
 	});
 </script>
 
-<Story name="Default">
+<Story name="Default" args={{}}>
 	{#snippet children(args)}
 		<ListCard>
 			<div class="px-4 py-3 text-sm">First item</div>

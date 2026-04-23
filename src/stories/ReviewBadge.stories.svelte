@@ -9,20 +9,20 @@
 	});
 </script>
 
-<Story name="Approved">
+<Story name="Approved" args={{ status: 'approved', reviewer: 'john' }}>
 	{#snippet children(args)}
-		<ReviewBadge status="approved" reviewer="john" />
+		<ReviewBadge {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Changes Requested">
+<Story name="Changes Requested" args={{ status: 'changes_requested', reviewer: 'jane' }}>
 	{#snippet children(args)}
-		<ReviewBadge status="changes_requested" reviewer="jane" />
+		<ReviewBadge {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Commented">
+<Story name="Commented" args={{ status: 'commented', reviewer: 'bob' }}>
 	{#snippet children(args)}
-		<ReviewBadge status="commented" reviewer="bob" />
+		<ReviewBadge {...args} />
 	{/snippet}
 </Story>

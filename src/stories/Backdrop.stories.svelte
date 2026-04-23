@@ -12,7 +12,7 @@
 	});
 </script>
 
-<Story name="Default">
+<Story name="Default" args={{}}>
 	{#snippet children(args)}
 		<div class="relative">
 			<p class="p-4">Content behind backdrop</p>
@@ -21,7 +21,7 @@
 	{/snippet}
 </Story>
 
-<Story name="With Click">
+<Story name="With Click" args={{}}>
 	{#snippet children(args)}
 		<div class="relative">
 			<button class="btn">Open Modal</button>

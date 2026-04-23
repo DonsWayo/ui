@@ -21,19 +21,19 @@
 	});
 </script>
 
-<Story name="Default">
+<Story name="Default" args={{ count: 5 }}>
 	{#snippet children(args)}
-		<CountBadge count={5} />
+		<CountBadge {...args} />
 	{/snippet}
 </Story>
 
-<Story name="With Max">
+<Story name="With Max" args={{ count: 150, max: 99 }}>
 	{#snippet children(args)}
-		<CountBadge count={150} max={99} />
+		<CountBadge {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Variants">
+<Story name="Variants" args={{}}>
 	{#snippet children(args)}
 		<div class="flex gap-4">
 			<CountBadge count={5} variant="primary" />
@@ -43,7 +43,7 @@
 	{/snippet}
 </Story>
 
-<Story name="Sizes">
+<Story name="Sizes" args={{}}>
 	{#snippet children(args)}
 		<div class="flex items-center gap-4">
 			<CountBadge count={5} size="sm" />
@@ -52,8 +52,8 @@
 	{/snippet}
 </Story>
 
-<Story name="Zero Count (Hidden)">
+<Story name="Zero Count (Hidden)" args={{ count: 0 }}>
 	{#snippet children(args)}
-		<CountBadge count={0} />
+		<CountBadge {...args} />
 	{/snippet}
 </Story>

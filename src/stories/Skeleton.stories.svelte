@@ -9,19 +9,19 @@
 	});
 </script>
 
-<Story name="Line">
+<Story name="Line" args={{}}>
 	{#snippet children(args)}
 		<Skeleton class="h-4 w-48" />
 	{/snippet}
 </Story>
 
-<Story name="Circle">
+<Story name="Circle" args={{}}>
 	{#snippet children(args)}
 		<Skeleton class="h-10 w-10 rounded-full" />
 	{/snippet}
 </Story>
 
-<Story name="Card Skeleton">
+<Story name="Card Skeleton" args={{}}>
 	{#snippet children(args)}
 		<div class="flex flex-col gap-3 rounded-lg border p-4 w-64">
 			<div class="flex flex-row items-center gap-3">

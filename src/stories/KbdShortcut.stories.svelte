@@ -16,26 +16,26 @@
 	});
 </script>
 
-<Story name="Default">
+<Story name="Default" args={{ keys: ['Ctrl', 'K'] }}>
 	{#snippet children(args)}
-		<KbdShortcut keys={['Ctrl', 'K']} />
+		<KbdShortcut {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Single Key">
+<Story name="Single Key" args={{ keys: ['Enter'] }}>
 	{#snippet children(args)}
-		<KbdShortcut keys={['Enter']} />
+		<KbdShortcut {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Three Keys">
+<Story name="Three Keys" args={{ keys: ['Ctrl', 'Shift', 'P'] }}>
 	{#snippet children(args)}
-		<KbdShortcut keys={['Ctrl', 'Shift', 'P']} />
+		<KbdShortcut {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Small Size">
+<Story name="Small Size" args={{ keys: ['Ctrl', 'K'], size: 'xs' }}>
 	{#snippet children(args)}
-		<KbdShortcut keys={['Ctrl', 'K']} size="xs" />
+		<KbdShortcut {...args} />
 	{/snippet}
 </Story>

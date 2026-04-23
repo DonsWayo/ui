@@ -10,7 +10,7 @@
 	});
 </script>
 
-<Story name="Default">
+<Story name="Default" args={{}}>
 	{#snippet children(args)}
 		<div class="flex items-center gap-4">
 			<Button variant="outline">First</Button>

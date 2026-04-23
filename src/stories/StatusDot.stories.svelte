@@ -17,31 +17,31 @@
 	});
 </script>
 
-<Story name="Default">
+<Story name="Default" args={{ color: 'bg-green-500' }}>
 	{#snippet children(args)}
-		<StatusDot color="bg-green-500" />
+		<StatusDot {...args} />
 	{/snippet}
 </Story>
 
-<Story name="With Status">
+<Story name="With Status" args={{ status: 'open' }}>
 	{#snippet children(args)}
-		<StatusDot status="open" />
+		<StatusDot {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Animated">
+<Story name="Animated" args={{ color: 'bg-blue-500', animated: true }}>
 	{#snippet children(args)}
-		<StatusDot color="bg-blue-500" animated />
+		<StatusDot {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Running Status">
+<Story name="Running Status" args={{ status: 'running' }}>
 	{#snippet children(args)}
-		<StatusDot status="running" />
+		<StatusDot {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Sizes">
+<Story name="Sizes" args={{}}>
 	{#snippet children(args)}
 		<div class="flex items-center gap-4">
 			<StatusDot color="bg-green-500" size="xs" />

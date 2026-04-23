@@ -12,28 +12,20 @@
 	});
 </script>
 
-<Story name="Trending Up">
+<Story name="Trending Up" args={{ data: [1, 3, 2, 5, 4, 8, 6] }}>
 	{#snippet children(args)}
-		<Sparkline data={[1, 3, 2, 5, 4, 8, 6]} />
+		<Sparkline {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Trending Down">
+<Story name="Trending Down" args={{ data: [9, 7, 8, 5, 6, 3, 2], color: 'stroke-destructive', fillColor: 'fill-destructive/10' }}>
 	{#snippet children(args)}
-		<Sparkline
-			data={[9, 7, 8, 5, 6, 3, 2]}
-			color="stroke-destructive"
-			fillColor="fill-destructive/10"
-		/>
+		<Sparkline {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Flat Line">
+<Story name="Flat Line" args={{ data: [4, 4, 4, 4, 4, 4, 4], color: 'stroke-muted-foreground', fillColor: 'fill-muted/10' }}>
 	{#snippet children(args)}
-		<Sparkline
-			data={[4, 4, 4, 4, 4, 4, 4]}
-			color="stroke-muted-foreground"
-			fillColor="fill-muted/10"
-		/>
+		<Sparkline {...args} />
 	{/snippet}
 </Story>

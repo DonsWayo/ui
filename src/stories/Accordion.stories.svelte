@@ -9,7 +9,7 @@
 	});
 </script>
 
-<Story name="Single">
+<Story name="Single" args={{}}>
 	{#snippet children(args)}
 		<Accordion type="single" class="w-80">
 			<AccordionItem value="item-1">
@@ -35,7 +35,7 @@
 	{/snippet}
 </Story>
 
-<Story name="Multiple">
+<Story name="Multiple" args={{}}>
 	{#snippet children(args)}
 		<Accordion type="multiple" class="w-80">
 			<AccordionItem value="item-1">
@@ -61,7 +61,7 @@
 	{/snippet}
 </Story>
 
-<Story name="Default Open">
+<Story name="Default Open" args={{}}>
 	{#snippet children(args)}
 		<Accordion type="single" value="item-2" class="w-80">
 			<AccordionItem value="item-1">

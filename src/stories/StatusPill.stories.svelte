@@ -9,50 +9,50 @@
 	});
 </script>
 
-<Story name="Success">
+<Story name="Success" args={{ status: 'success' }}>
 	{#snippet children(args)}
-		<StatusPill status="success" />
+		<StatusPill {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Failure">
+<Story name="Failure" args={{ status: 'failure' }}>
 	{#snippet children(args)}
-		<StatusPill status="failure" />
+		<StatusPill {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Running">
+<Story name="Running" args={{ status: 'running' }}>
 	{#snippet children(args)}
-		<StatusPill status="running" />
+		<StatusPill {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Pending">
+<Story name="Pending" args={{ status: 'pending' }}>
 	{#snippet children(args)}
-		<StatusPill status="pending" />
+		<StatusPill {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Cancelled">
+<Story name="Cancelled" args={{ status: 'cancelled' }}>
 	{#snippet children(args)}
-		<StatusPill status="cancelled" />
+		<StatusPill {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Warning">
+<Story name="Warning" args={{ status: 'warning' }}>
 	{#snippet children(args)}
-		<StatusPill status="warning" />
+		<StatusPill {...args} />
 	{/snippet}
 </Story>
 
-<Story name="With Custom Label">
+<Story name="With Custom Label" args={{ status: 'success', label: 'Deployed' }}>
 	{#snippet children(args)}
-		<StatusPill status="success" label="Deployed" />
+		<StatusPill {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Small (xs)">
+<Story name="Small (xs)" args={{ status: 'running', size: 'xs' }}>
 	{#snippet children(args)}
-		<StatusPill status="running" size="xs" />
+		<StatusPill {...args} />
 	{/snippet}
 </Story>

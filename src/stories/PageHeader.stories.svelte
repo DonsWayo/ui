@@ -9,19 +9,19 @@
 	});
 </script>
 
-<Story name="Default">
+<Story name="Default" args={{ title: 'Repositories' }}>
 	{#snippet children(args)}
-		<PageHeader title="Repositories" />
+		<PageHeader {...args} />
 	{/snippet}
 </Story>
 
-<Story name="With Subtitle">
+<Story name="With Subtitle" args={{ title: 'Repositories', subtitle: 'All repositories in your workspace' }}>
 	{#snippet children(args)}
-		<PageHeader title="Repositories" subtitle="All repositories in your workspace" />
+		<PageHeader {...args} />
 	{/snippet}
 </Story>
 
-<Story name="With Actions">
+<Story name="With Actions" args={{}}>
 	{#snippet children(args)}
 		<PageHeader title="Repositories" subtitle="All repositories in your workspace">
 			{#snippet actions()}

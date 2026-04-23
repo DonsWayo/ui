@@ -31,14 +31,14 @@ console.log(hello);
 `;
 </script>
 
-<Story name="Default">
+<Story name="Default" args={{}}>
 	{#snippet children(args)}
 		<MarkdownRenderer content={sampleMarkdown} />
 	{/snippet}
 </Story>
 
-<Story name="With Links">
+<Story name="With Links" args={{ content: 'Check out [our docs](/docs) for more info.' }}>
 	{#snippet children(args)}
-		<MarkdownRenderer content="Check out [our docs](/docs) for more info." />
+		<MarkdownRenderer {...args} />
 	{/snippet}
 </Story>

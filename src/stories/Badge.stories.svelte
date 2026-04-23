@@ -15,23 +15,31 @@
 	});
 </script>
 
-<Story name="Default">
-	<Badge>Badge</Badge>
+<Story name="Default" args={{}}>
+	{#snippet children(args)}
+		<Badge>Badge</Badge>
+	{/snippet}
 </Story>
 
-<Story name="Secondary">
-	<Badge variant="secondary">Secondary</Badge>
+<Story name="Secondary" args={{}}>
+	{#snippet children(args)}
+		<Badge variant="secondary">Secondary</Badge>
+	{/snippet}
 </Story>
 
-<Story name="Destructive">
-	<Badge variant="destructive">Destructive</Badge>
+<Story name="Destructive" args={{}}>
+	{#snippet children(args)}
+		<Badge variant="destructive">Destructive</Badge>
+	{/snippet}
 </Story>
 
-<Story name="Outline">
-	<Badge variant="outline">Outline</Badge>
+<Story name="Outline" args={{}}>
+	{#snippet children(args)}
+		<Badge variant="outline">Outline</Badge>
+	{/snippet}
 </Story>
 
-<Story name="All Variants">
+<Story name="All Variants" args={{}}>
 	{#snippet children(args)}
 		<div class="flex flex-row gap-2 items-center">
 			<Badge variant="default">Default</Badge>

@@ -9,19 +9,19 @@
 	});
 </script>
 
-<Story name="Default">
+<Story name="Default" args={{ value: '42', label: 'Issues Open' }}>
 	{#snippet children(args)}
-		<StatCard value="42" label="Issues Open" />
+		<StatCard {...args} />
 	{/snippet}
 </Story>
 
-<Story name="With Hint">
+<Story name="With Hint" args={{ value: '$12.50', label: 'Monthly Cost', hint: '↓ 8% from last month' }}>
 	{#snippet children(args)}
-		<StatCard value="$12.50" label="Monthly Cost" hint="↓ 8% from last month" />
+		<StatCard {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Grid">
+<Story name="Grid" args={{}}>
 	{#snippet children(args)}
 		<div class="grid grid-cols-3 gap-4">
 			<StatCard value="42" label="Issues Open" />

@@ -9,44 +9,44 @@
 	});
 </script>
 
-<Story name="Open">
+<Story name="Open" args={{ status: 'open' }}>
 	{#snippet children(args)}
-		<StatusBadge status="open" />
+		<StatusBadge {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Closed">
+<Story name="Closed" args={{ status: 'closed' }}>
 	{#snippet children(args)}
-		<StatusBadge status="closed" />
+		<StatusBadge {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Running">
+<Story name="Running" args={{ status: 'running' }}>
 	{#snippet children(args)}
-		<StatusBadge status="running" />
+		<StatusBadge {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Succeeded">
+<Story name="Succeeded" args={{ status: 'succeeded' }}>
 	{#snippet children(args)}
-		<StatusBadge status="succeeded" />
+		<StatusBadge {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Failed">
+<Story name="Failed" args={{ status: 'failed' }}>
 	{#snippet children(args)}
-		<StatusBadge status="failed" />
+		<StatusBadge {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Merged">
+<Story name="Merged" args={{ status: 'merged' }}>
 	{#snippet children(args)}
-		<StatusBadge status="merged" />
+		<StatusBadge {...args} />
 	{/snippet}
 </Story>
 
-<Story name="With Custom Label">
+<Story name="With Custom Label" args={{ status: 'running', label: 'Deploying...' }}>
 	{#snippet children(args)}
-		<StatusBadge status="running" label="Deploying..." />
+		<StatusBadge {...args} />
 	{/snippet}
 </Story>

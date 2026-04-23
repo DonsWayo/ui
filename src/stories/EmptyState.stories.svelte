@@ -11,13 +11,13 @@
 	});
 </script>
 
-<Story name="Default">
+<Story name="Default" args={{ title: 'No results found', description: 'Try adjusting your search terms.' }}>
 	{#snippet children(args)}
-		<EmptyState title="No results found" description="Try adjusting your search terms." />
+		<EmptyState {...args} />
 	{/snippet}
 </Story>
 
-<Story name="With Icon">
+<Story name="With Icon" args={{}}>
 	{#snippet children(args)}
 		<EmptyState
 			title="No results found"
@@ -27,7 +27,7 @@
 	{/snippet}
 </Story>
 
-<Story name="With Action">
+<Story name="With Action" args={{}}>
 	{#snippet children(args)}
 		<EmptyState title="No results found" description="Try adjusting your search terms.">
 			<Button>Clear Filters</Button>
@@ -35,14 +35,14 @@
 	{/snippet}
 </Story>
 
-<Story name="Compact">
+<Story name="Compact" args={{ variant: 'compact', title: 'No results' }}>
 	{#snippet children(args)}
-		<EmptyState variant="compact" title="No results" />
+		<EmptyState {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Inline">
+<Story name="Inline" args={{ variant: 'inline', title: 'No results' }}>
 	{#snippet children(args)}
-		<EmptyState variant="inline" title="No results" />
+		<EmptyState {...args} />
 	{/snippet}
 </Story>
