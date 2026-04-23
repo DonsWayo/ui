@@ -1,5 +1,6 @@
 <script module>
 	import { defineMeta } from '@storybook/addon-svelte-csf';
+	import { userEvent, within, expect } from 'storybook/test';
 	import { Textarea } from '$lib/index.js';
 
 	const { Story } = defineMeta({
@@ -14,7 +15,15 @@
 	});
 </script>
 
-<Story name="Default">
+<Story
+	name="Default"
+	play={async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+		const textarea = canvas.getByRole('textbox');
+		await userEvent.type(textarea, 'Hello from Nucel');
+		await expect(textarea).toHaveValue('Hello from Nucel');
+	}}
+>
 	{#snippet children(args)}
 		<Textarea {...args} placeholder="Enter text..." />
 	{/snippet}

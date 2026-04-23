@@ -1,7 +1,7 @@
 <script module>
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import { Button } from '$lib/index.js';
-	import { fn } from 'storybook/test';
+	import { fn, userEvent, within, expect } from 'storybook/test';
 
 	const { Story } = defineMeta({
 		title: 'Components/Button',
@@ -26,7 +26,19 @@
 	});
 </script>
 
-<Story name="Default" args={{ children: 'Button' }}>
+<Story
+	name="Default"
+	args={{ children: 'Button' }}
+	play={async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+		const buttons = canvas.getAllByRole('button');
+		const button = buttons[0];
+		await expect(button).toBeInTheDocument();
+		await userEvent.click(button);
+		// button click should not throw an error
+		await expect(button).toBeVisible();
+	}}
+>
 	{#snippet children(args)}
 		<Button {...args}>Button</Button>
 	{/snippet}

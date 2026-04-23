@@ -1,5 +1,6 @@
 <script module>
 	import { defineMeta } from '@storybook/addon-svelte-csf';
+	import { userEvent, within, expect } from 'storybook/test';
 	import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '$lib/index.js';
 
 	const { Story } = defineMeta({
@@ -9,7 +10,18 @@
 	});
 </script>
 
-<Story name="Single" args={{}}>
+<Story
+	name="Single"
+	args={{}}
+	play={async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+		const triggers = canvas.getAllByRole('button');
+		// Click the first trigger to open it
+		await userEvent.click(triggers[0]);
+		// The accordion content should now be visible in the DOM
+		await expect(canvas.getByText('Nucel is an AI agent platform that lets you run autonomous agents across your repositories.')).toBeVisible();
+	}}
+>
 	{#snippet children(args)}
 		<Accordion type="single" class="w-80">
 			<AccordionItem value="item-1">
