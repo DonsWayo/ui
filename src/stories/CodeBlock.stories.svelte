@@ -4,7 +4,6 @@
 
 	const { Story } = defineMeta({
 		title: 'Components/CodeBlock',
-		component: CodeBlock,
 		tags: ['autodocs'],
 	});
 </script>
@@ -45,8 +44,8 @@
 	{/snippet}
 </Story>
 
-<Story name="Multi-language">
-	{#snippet children()}
+<Story name="Multi-language" args={{}}>
+	{#snippet children(args)}
 		<div class="flex flex-col gap-4">
 			<CodeBlock language="python" code={`def add(a: int, b: int) -> int:\n    return a + b`} />
 			<CodeBlock language="rust" code={`fn main() {\n    println!("Hello, world!");\n}`} />

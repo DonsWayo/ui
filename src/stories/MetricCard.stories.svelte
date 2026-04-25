@@ -4,7 +4,6 @@
 
 	const { Story } = defineMeta({
 		title: 'Components/MetricCard',
-		component: MetricCard,
 		tags: ['autodocs'],
 	});
 </script>
@@ -54,8 +53,8 @@
 	{/snippet}
 </Story>
 
-<Story name="Grid">
-	{#snippet children()}
+<Story name="Grid" args={{}}>
+	{#snippet children(args)}
 		<div class="grid grid-cols-3 gap-4">
 			<MetricCard
 				value="$12.50"

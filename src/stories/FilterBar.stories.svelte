@@ -4,7 +4,6 @@
 
 	const { Story } = defineMeta({
 		title: 'Components/FilterBar',
-		component: FilterBar,
 		tags: ['autodocs'],
 	});
 </script>
@@ -30,8 +29,8 @@
 	{/snippet}
 </Story>
 
-<Story name="Many Chips">
-	{#snippet children()}
+<Story name="Many Chips" args={{}}>
+	{#snippet children(args)}
 		<FilterBar
 			value=""
 			filters={[
