@@ -287,6 +287,13 @@ export { default as PermissionChips } from './components/ui/PermissionChips.svel
 // AppCard — Nucel-App row card (marketplace, installed apps, owned apps)
 export { default as AppCard } from './components/ui/AppCard.svelte';
 
+// Kanban primitives — generic Trello-style column/card chrome.
+// DnD wiring stays out: the consumer attaches svelte-dnd-action's
+// `dndzone` to whichever container they want sortable.
+export { default as KanbanBoard } from './components/ui/KanbanBoard.svelte';
+export { default as KanbanColumn } from './components/ui/KanbanColumn.svelte';
+export { default as KanbanCard } from './components/ui/KanbanCard.svelte';
+
 // Section
 export { default as Section } from './components/ui/Section.svelte';
 
