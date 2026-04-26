@@ -287,6 +287,13 @@ export { default as PermissionChips } from './components/ui/PermissionChips.svel
 // AppCard — Nucel-App row card (marketplace, installed apps, owned apps)
 export { default as AppCard } from './components/ui/AppCard.svelte';
 
+// Kanban primitives — generic Trello-style column/card chrome.
+// DnD wiring stays out: the consumer attaches svelte-dnd-action's
+// `dndzone` to whichever container they want sortable.
+export { default as KanbanBoard } from './components/ui/KanbanBoard.svelte';
+export { default as KanbanColumn } from './components/ui/KanbanColumn.svelte';
+export { default as KanbanCard } from './components/ui/KanbanCard.svelte';
+
 // Section
 export { default as Section } from './components/ui/Section.svelte';
 
@@ -301,3 +308,21 @@ export { default as AppShell } from './components/ui/AppShell.svelte';
 export { default as AppSidebar } from './components/ui/AppSidebar.svelte';
 export { default as NavItem } from './components/ui/NavItem.svelte';
 export { default as NavSection } from './components/ui/NavSection.svelte';
+
+// CopyButton
+export { default as CopyButton } from './components/ui/CopyButton.svelte';
+
+// Pagination
+export { default as Pagination } from './components/ui/Pagination.svelte';
+
+// CodeBlock
+export { default as CodeBlock } from './components/ui/CodeBlock.svelte';
+
+// Timeline
+export { default as Timeline } from './components/ui/Timeline.svelte';
+
+// FilterBar
+export { default as FilterBar } from './components/ui/FilterBar.svelte';
+
+// MetricCard
+export { default as MetricCard } from './components/ui/MetricCard.svelte';
