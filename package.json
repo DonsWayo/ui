@@ -1,15 +1,25 @@
 {
 	"name": "@nucel/ui",
-	"version": "0.13.0",
+	"version": "0.14.0",
 	"description": "A comprehensive Svelte 5 UI component library for Nucel projects",
 	"type": "module",
 	"svelte": "./src/lib/index.ts",
+	"sideEffects": [
+		"*.css",
+		"**/*.svelte"
+	],
 	"exports": {
 		".": {
 			"types": "./src/lib/index.ts",
 			"svelte": "./src/lib/index.ts",
 			"default": "./src/lib/index.ts"
-		}
+		},
+		"./monaco": {
+			"types": "./src/lib/monaco.ts",
+			"svelte": "./src/lib/monaco.ts",
+			"default": "./src/lib/monaco.ts"
+		},
+		"./styles.css": "./src/styles.css"
 	},
 	"files": [
 		"src/lib",

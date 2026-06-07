@@ -312,19 +312,11 @@ export { default as ThemeToggle } from './components/ThemeToggle.svelte';
 
 // ---- 0.7.0 additions ----
 
-// CodeEditor — Monaco-powered editable code editor.
-// Lazy-loaded on first mount; SSR-safe; matches @nucel/ui design tokens.
-export { default as CodeEditor } from './components/CodeEditor.svelte';
-export type { CodeEditorTheme } from './components/CodeEditor.svelte';
-
-// DiffEditor — Monaco-powered side-by-side or inline diff view.
-export { default as DiffEditor } from './components/DiffEditor.svelte';
-
-// ThreeWayMerge — base/ours/theirs/merged conflict-resolution UI on top of Monaco.
-export { default as ThreeWayMerge } from './components/ThreeWayMerge.svelte';
-
-// Monaco loader (advanced — use the components above when possible).
-export { loadMonaco, resolveMonacoTheme } from './utils/monacoLoader.js';
+// Monaco-powered editors (CodeEditor, DiffEditor, ThreeWayMerge, loadMonaco,
+// resolveMonacoTheme) moved to the `@nucel/ui/monaco` subpath. Keeping them out
+// of the main barrel stops monaco's `?worker` imports from being dragged into
+// every consumer's dep-optimizer pass (Vite 8 rolldown UNLOADABLE_DEPENDENCY).
+// Import them from '@nucel/ui/monaco' when you need an editor.
 
 // ---- 0.8.0 additions ----
 
