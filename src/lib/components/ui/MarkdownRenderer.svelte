@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { marked } from 'marked';
-	import DOMPurify from 'dompurify';
 	import { onMount, tick } from 'svelte';
 	import {
 		getHighlighter,
@@ -25,11 +23,18 @@
 	let host = $state<HTMLDivElement | undefined>(undefined);
 	let isDark = $state(false);
 
+	// `marked` (~45KB) and `DOMPurify` (~45KB) are loaded lazily on mount rather
+	// than imported at module scope — a top-level import pulled both into every
+	// @nucel/ui consumer's bundle even when no markdown was ever rendered. They
+	// resolve to `null` until loaded (and during SSR), so `html` is empty for
+	// one tick, then renders.
+	let parse = $state<((md: string) => string) | null>(null);
+	let sanitize = $state<((html: string) => string) | null>(null);
+
 	let html = $derived(
-		DOMPurify.sanitize(marked.parse(content, { gfm: true, breaks: false }) as string, {
-			// Allow Shiki's inline style attributes on spans (colour tokens).
-			ADD_ATTR: ['style', 'data-line', 'data-language'],
-		}),
+		parse && sanitize
+			? sanitize(parse(content))
+			: '',
 	);
 
 	function readDarkMode(): boolean {
@@ -46,6 +51,21 @@
 			attributes: true,
 			attributeFilter: ['class'],
 		});
+
+		// Lazy-load the markdown + sanitizer stack (fire-and-forget).
+		void (async () => {
+			const [{ marked }, { default: DOMPurify }] = await Promise.all([
+				import('marked'),
+				import('dompurify'),
+			]);
+			parse = (md: string) => marked.parse(md, { gfm: true, breaks: false }) as string;
+			sanitize = (h: string) =>
+				DOMPurify.sanitize(h, {
+					// Allow Shiki's inline style attributes on spans (colour tokens).
+					ADD_ATTR: ['style', 'data-line', 'data-language'],
+				});
+		})();
+
 		return () => mo.disconnect();
 	});
 
