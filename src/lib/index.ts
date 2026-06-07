@@ -405,8 +405,10 @@ export { default as KanbanBoard } from './components/ui/KanbanBoard.svelte';
 export { default as KanbanColumn } from './components/ui/KanbanColumn.svelte';
 export { default as KanbanCard } from './components/ui/KanbanCard.svelte';
 
-// RichEditor — Tiptap-powered rich text editor (wiki/issues/PR comments).
-export { default as RichEditor } from './components/ui/editor/RichEditor.svelte';
+// RichEditor (Tiptap) moved to the `@nucel/ui/editor` subpath — keeping it out
+// of the main barrel stops the entire Tiptap/ProseMirror graph (~400-700KB)
+// from being pulled into every consumer's optimize + bundle. Import it from
+// '@nucel/ui/editor'.
 
 // Table — shadcn-styled table primitives.
 export {
