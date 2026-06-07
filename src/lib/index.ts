@@ -163,8 +163,8 @@ export {
 // Separator
 export { Separator } from './components/ui/separator/index.js';
 
-// Skeleton
-export { Skeleton } from './components/ui/skeleton/index.js';
+// Skeleton (primitive — kept for backwards-compat)
+export { Skeleton as SkeletonPrimitive } from './components/ui/skeleton/index.js';
 
 // Sonner (Toaster)
 export { Toaster } from './components/ui/sonner/index.js';
@@ -243,19 +243,180 @@ export { default as Sparkline } from './components/ui/Sparkline.svelte';
 // ProviderIcon
 export { default as ProviderIcon } from './components/ui/ProviderIcon.svelte';
 
-// RichEditor — full-featured TipTap editor (wiki, issues, comments)
-export { default as RichEditor } from './components/ui/editor/RichEditor.svelte';
+// Checkbox (shadcn-styled wrapper over bits-ui)
+export { default as Checkbox } from './components/Checkbox.svelte';
 
-// CostDisplay — animated cost/currency display component
-export { default as CostDisplay } from './components/ui/CostDisplay.svelte';
+// RadioGroup + Radio (shadcn-styled wrappers over bits-ui)
+export { default as RadioGroup } from './components/RadioGroup.svelte';
+export { default as Radio } from './components/Radio.svelte';
 
-// StatusPill
-export { default as StatusPill } from './components/ui/StatusPill.svelte';
+// Form + FormField (InertiaJS-friendly defaults)
+export { default as Form } from './components/Form.svelte';
+export { default as FormField } from './components/FormField.svelte';
 
-// PageHeader
+// Pagination (composite, bits-ui driven)
+export { default as Pagination } from './components/Pagination.svelte';
+
+// StatCard (dashboard metric)
+export { default as StatCard } from './components/StatCard.svelte';
+
+// Breadcrumbs (array-driven composite; for low-level pieces use Breadcrumb*)
+export { default as Breadcrumbs } from './components/Breadcrumbs.svelte';
+
+// ---- 0.5.0 additions ----
+
+// DataTable
+export { default as DataTable } from './components/DataTable.svelte';
+export type { ColumnDef, SortDirection } from './components/DataTable.svelte';
+
+// SearchInput
+export { default as SearchInput } from './components/SearchInput.svelte';
+
+// DateRangePicker
+export { default as DateRangePicker } from './components/DateRangePicker.svelte';
+export type { DateRange, DateRangePreset } from './components/DateRangePicker.svelte';
+export { DEFAULT_PRESETS as DateRangePickerDefaultPresets } from './components/DateRangePicker.svelte';
+
+// CodeBlock
+export { default as CodeBlock } from './components/CodeBlock.svelte';
+
+// Skeleton (composite — shimmer + width/height; supersedes SkeletonPrimitive)
+export { default as Skeleton } from './components/Skeleton.svelte';
+
+// Drawer (side panel, built on Sheet primitive)
+export { default as Drawer } from './components/Drawer.svelte';
+
+// Combobox (searchable Select built on bits-ui Combobox)
+export { default as Combobox } from './components/Combobox.svelte';
+export type { ComboboxOption } from './components/Combobox.svelte';
+
+// CommandPalette (cmdk-style palette built on bits-ui Command + Dialog)
+export { default as CommandPalette } from './components/CommandPalette.svelte';
+export type { CommandPaletteItem } from './components/CommandPalette.svelte';
+
+// ---- 0.6.0 additions ----
+
+// ThemeProvider — exposes a `theme` ('light' | 'dark' | 'system') context,
+// persists the user's preference in localStorage, and reacts to
+// `prefers-color-scheme` when set to 'system'.
+export { default as ThemeProvider } from './components/ThemeProvider.svelte';
+export {
+	getThemeContext,
+	type Theme,
+	type ResolvedTheme,
+	type ThemeContext,
+} from './components/ThemeProvider.svelte';
+
+// ThemeToggle — icon button cycling system -> light -> dark -> system.
+export { default as ThemeToggle } from './components/ThemeToggle.svelte';
+
+// ---- 0.7.0 additions ----
+
+// CodeEditor — Monaco-powered editable code editor.
+// Lazy-loaded on first mount; SSR-safe; matches @nucel/ui design tokens.
+export { default as CodeEditor } from './components/CodeEditor.svelte';
+export type { CodeEditorTheme } from './components/CodeEditor.svelte';
+
+// DiffEditor — Monaco-powered side-by-side or inline diff view.
+export { default as DiffEditor } from './components/DiffEditor.svelte';
+
+// ThreeWayMerge — base/ours/theirs/merged conflict-resolution UI on top of Monaco.
+export { default as ThreeWayMerge } from './components/ThreeWayMerge.svelte';
+
+// Monaco loader (advanced — use the components above when possible).
+export { loadMonaco, resolveMonacoTheme } from './utils/monacoLoader.js';
+
+// ---- 0.8.0 additions ----
+
+// InlineCode — single-line <code> with subtle background, no highlighting.
+export { default as InlineCode } from './components/InlineCode.svelte';
+
+// Shiki helpers (re-exported so consumers can warm the highlighter early or
+// load extra languages outside CodeBlock — e.g. for a route prefetch hook).
+export {
+	getHighlighter as getShikiHighlighter,
+	loadLanguage as loadShikiLanguage,
+	SHIKI_LIGHT_THEME,
+	SHIKI_DARK_THEME,
+} from './utils/shikiHighlighter.js';
+
+// File-path → Shiki language id helper, useful for repo file viewers.
+export { detectLanguageFromPath } from './utils/detectLanguage.js';
+
+// ---- 0.9.0 additions (mobile primitives) ----
+
+// BottomSheet — mobile bottom-anchored sheet (Sheet primitive with grabber +
+// safe-area). Pair with `md:hidden` on triggers to keep desktop unchanged.
+export { default as BottomSheet } from './components/BottomSheet.svelte';
+
+// Fab — floating action button for mobile primary actions.
+// Defaults to `md:hidden`; pass `alwaysVisible` to show on desktop too.
+export { default as Fab } from './components/Fab.svelte';
+
+// ---- 0.10.0 additions (raw-primitive gap closers) ----
+
+// CopyButton — copy-to-clipboard button with built-in "Copied" feedback and
+// timeout reset. Replaces the duplicated clipboard.writeText + copied-state
+// pattern in repo clone boxes, token reveal screens, session viewers, etc.
+export { default as CopyButton } from './components/CopyButton.svelte';
+export type { CopyButtonVariant, CopyButtonSize } from './components/CopyButton.svelte';
+
+// IconButton — icon-only button OR anchor (pass `href`). Defaults to the
+// muted-foreground "toolbar glyph" look (hover:bg-accent) used in TopBar,
+// file trees, and dismiss buttons. `size="tap"` gives a 44×44 mobile target.
+// `aria-label` is required.
+export { default as IconButton } from './components/IconButton.svelte';
+export {
+	iconButtonVariants,
+	type IconButtonVariant,
+	type IconButtonSize,
+	type IconButtonProps,
+} from './components/IconButton.svelte';
+
+// ColorInput — styled native <input type="color"> wrapper matching the
+// form-control border/ring/focus tokens. Optional `showValue` hex readout.
+export { default as ColorInput } from './components/ColorInput.svelte';
+
+// ---- 0.11.0 additions (restored components) ----
+//
+// These components were part of the export surface in earlier releases but
+// were dropped from the 0.10.0 barrel. The nucel app still imports them, so a
+// clean `bun install --frozen-lockfile` against 0.10.0 broke the build. They
+// are restored here against the package's shared-component conventions.
+
+// Alert — inline notice banner (info/success/warning/error variants).
+export { default as Alert } from './components/ui/Alert.svelte';
+
+// Section + SectionTitle — page section wrapper + heading.
+export { default as Section } from './components/ui/Section.svelte';
+export { default as SectionTitle } from './components/ui/SectionTitle.svelte';
+
+// PageHeader — page title + actions header row.
 export { default as PageHeader } from './components/ui/PageHeader.svelte';
 
-// Table
+// ListCard — bordered list-item card row.
+export { default as ListCard } from './components/ui/ListCard.svelte';
+
+// Pills — compact status/branch/comment chips.
+export { default as StatusPill } from './components/ui/StatusPill.svelte';
+export { default as BranchPill } from './components/ui/BranchPill.svelte';
+export { default as CommentPill } from './components/ui/CommentPill.svelte';
+
+// PermissionChips — permission/scope chip group.
+export { default as PermissionChips } from './components/ui/PermissionChips.svelte';
+
+// AppCard — app/repo summary card.
+export { default as AppCard } from './components/ui/AppCard.svelte';
+
+// Kanban — board / column / card composites.
+export { default as KanbanBoard } from './components/ui/KanbanBoard.svelte';
+export { default as KanbanColumn } from './components/ui/KanbanColumn.svelte';
+export { default as KanbanCard } from './components/ui/KanbanCard.svelte';
+
+// RichEditor — Tiptap-powered rich text editor (wiki/issues/PR comments).
+export { default as RichEditor } from './components/ui/editor/RichEditor.svelte';
+
+// Table — shadcn-styled table primitives.
 export {
 	Table,
 	TableHeader,
@@ -265,64 +426,5 @@ export {
 	TableCell,
 	TableCaption,
 } from './components/ui/table/index.js';
-
-// Alert
-export { default as Alert } from './components/ui/Alert.svelte';
-
-// ListCard
-export { default as ListCard } from './components/ui/ListCard.svelte';
-
-// StatCard
-export { default as StatCard } from './components/ui/StatCard.svelte';
-
-// BranchPill
-export { default as BranchPill } from './components/ui/BranchPill.svelte';
-
-// CommentPill
-export { default as CommentPill } from './components/ui/CommentPill.svelte';
-
-// PermissionChips — Nucel-App permission badges
-export { default as PermissionChips } from './components/ui/PermissionChips.svelte';
-
-// AppCard — Nucel-App row card (marketplace, installed apps, owned apps)
-export { default as AppCard } from './components/ui/AppCard.svelte';
-
-// Kanban primitives — generic Trello-style column/card chrome.
-// DnD wiring stays out: the consumer attaches svelte-dnd-action's
-// `dndzone` to whichever container they want sortable.
-export { default as KanbanBoard } from './components/ui/KanbanBoard.svelte';
-export { default as KanbanColumn } from './components/ui/KanbanColumn.svelte';
-export { default as KanbanCard } from './components/ui/KanbanCard.svelte';
-
-// Section
-export { default as Section } from './components/ui/Section.svelte';
-
-// SectionTitle
-export { default as SectionTitle } from './components/ui/SectionTitle.svelte';
-
-// FormField
-export { default as FormField } from './components/ui/FormField.svelte';
-
-// Layout
-export { default as AppShell } from './components/ui/AppShell.svelte';
-export { default as AppSidebar } from './components/ui/AppSidebar.svelte';
-export { default as NavItem } from './components/ui/NavItem.svelte';
-export { default as NavSection } from './components/ui/NavSection.svelte';
-
-// CopyButton
-export { default as CopyButton } from './components/ui/CopyButton.svelte';
-
-// Pagination
-export { default as Pagination } from './components/ui/Pagination.svelte';
-
-// CodeBlock
-export { default as CodeBlock } from './components/ui/CodeBlock.svelte';
-
-// Timeline
-export { default as Timeline } from './components/ui/Timeline.svelte';
-
-// FilterBar
-export { default as FilterBar } from './components/ui/FilterBar.svelte';
-
-// MetricCard
-export { default as MetricCard } from './components/ui/MetricCard.svelte';
+// ReactionBar — emoji reactions control
+export { default as ReactionBar } from './components/ReactionBar.svelte';

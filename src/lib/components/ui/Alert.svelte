@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Component, Snippet } from 'svelte';
-  import { cn } from '$lib/utils/cn.js';
+  import { cn } from '../../utils/cn.js';
 
   let {
     variant = 'default',
