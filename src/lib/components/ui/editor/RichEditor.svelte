@@ -20,8 +20,10 @@
   import TaskList from '@tiptap/extension-task-list';
   import TaskItem from '@tiptap/extension-task-item';
   import Mention from '@tiptap/extension-mention';
+  import { BubbleMenu } from '@tiptap/extension-bubble-menu';
   import { createMentionSuggestion } from './mention-suggestion.js';
   import { SlashCommands } from './slash-commands.js';
+  import { Callout } from './callout.js';
 
   /**
    * mode:
@@ -59,6 +61,7 @@
   }: Props = $props();
 
   let element: HTMLDivElement;
+  let bubbleEl: HTMLDivElement;
   let editor = $state<Editor | undefined>(undefined);
   let wordCount = $state(0);
 
@@ -128,7 +131,19 @@
     }
 
     if (mode === 'document') {
-      extensions.push(SlashCommands);
+      extensions.push(SlashCommands, Callout);
+      // Format-on-highlight bubble (Confluence/Notion-style). Only marks —
+      // block-level changes stay in the pill toolbar and slash menu.
+      extensions.push(
+        BubbleMenu.configure({
+          element: bubbleEl,
+          shouldShow: ({ editor: e, state }) => {
+            if (state.selection.empty) return false;
+            // No formatting bubble inside code blocks.
+            return !e.isActive('codeBlock');
+          },
+        })
+      );
     }
 
     if (mentionsUrl) {
@@ -325,6 +340,23 @@
   {/if}
 
   <div bind:this={element} class="re-content"></div>
+
+  <!-- Selection bubble (document mode) — BubbleMenu shows/positions it. -->
+  <div bind:this={bubbleEl} class="re-bubble" style="visibility: hidden">
+    {#if mode === 'document'}
+      <button type="button" title="Bold (⌘B)" class="re-btn re-bold {isBold ? 're-active' : ''}" onclick={() => cmd(() => editor?.chain().focus().toggleBold().run())}>B</button>
+      <button type="button" title="Italic (⌘I)" class="re-btn re-italic {isItalic ? 're-active' : ''}" onclick={() => cmd(() => editor?.chain().focus().toggleItalic().run())}>I</button>
+      <button type="button" title="Underline (⌘U)" class="re-btn re-underline {isUnderline ? 're-active' : ''}" onclick={() => cmd(() => editor?.chain().focus().toggleUnderline().run())}>U</button>
+      <button type="button" title="Strikethrough" class="re-btn re-strike {isStrike ? 're-active' : ''}" onclick={() => cmd(() => editor?.chain().focus().toggleStrike().run())}>S</button>
+      <button type="button" title="Code" class="re-btn re-code {isCode ? 're-active' : ''}" onclick={() => cmd(() => editor?.chain().focus().toggleCode().run())}>`</button>
+      <button type="button" title="Highlight" class="re-btn {isHighlight ? 're-active' : ''}" onclick={() => cmd(() => editor?.chain().focus().toggleHighlight().run())}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M15.243 3.757L8.586 10.414 6 13l1.5 1.5-3 3L6 19l1.5-1.5 1.5 1.5 2.586-2.586L13 18l6.243-6.243a2 2 0 000-2.829l-1.171-1.171a2 2 0 00-2.829 0z"/></svg>
+      </button>
+      <button type="button" title="Link" class="re-btn {isLink ? 're-active' : ''}" onclick={openLink}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+      </button>
+    {/if}
+  </div>
 </div>
 
 <style>
@@ -650,6 +682,57 @@
   :global(.rich-editor[data-mode="document"] .ProseMirror p.is-editor-empty:first-child::before) {
     opacity: 0.35;
   }
+
+  /* ── Selection bubble (document mode) ── */
+  .re-bubble {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    padding: 4px 6px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16);
+    z-index: 40;
+  }
+
+  /* ── Callouts — editor view. `[data-callout]` also styles rendered pages
+        (the node serializes as <div data-callout="…">). ── */
+  :global(.rich-editor .ProseMirror div[data-callout]) {
+    display: flex;
+    gap: 0.75rem;
+    margin: 1rem 0;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid;
+  }
+  :global(.rich-editor .ProseMirror div[data-callout] > :first-child) { margin-top: 0; }
+  :global(.rich-editor .ProseMirror div[data-callout] > :last-child) { margin-bottom: 0; }
+  :global(.rich-editor .ProseMirror div[data-callout]::before) {
+    flex-shrink: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  :global(.rich-editor .ProseMirror div[data-callout='info']) {
+    border-color: color-mix(in oklch, #3b82f6 35%, transparent);
+    background: color-mix(in oklch, #3b82f6 8%, transparent);
+  }
+  :global(.rich-editor .ProseMirror div[data-callout='info']::before) { content: 'ℹ️'; }
+  :global(.rich-editor .ProseMirror div[data-callout='warning']) {
+    border-color: color-mix(in oklch, #f59e0b 40%, transparent);
+    background: color-mix(in oklch, #f59e0b 9%, transparent);
+  }
+  :global(.rich-editor .ProseMirror div[data-callout='warning']::before) { content: '⚠️'; }
+  :global(.rich-editor .ProseMirror div[data-callout='tip']) {
+    border-color: color-mix(in oklch, #22c55e 35%, transparent);
+    background: color-mix(in oklch, #22c55e 8%, transparent);
+  }
+  :global(.rich-editor .ProseMirror div[data-callout='tip']::before) { content: '💡'; }
+  :global(.rich-editor .ProseMirror div[data-callout='danger']) {
+    border-color: color-mix(in oklch, #ef4444 35%, transparent);
+    background: color-mix(in oklch, #ef4444 8%, transparent);
+  }
+  :global(.rich-editor .ProseMirror div[data-callout='danger']::before) { content: '⛔'; }
 
   /* ── Slash-command menu (mounts on body via tippy) ── */
   :global(.slash-menu) {

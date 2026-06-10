@@ -33,6 +33,10 @@ const ICON = {
   code: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
   table: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>',
   divider: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><circle cx="12" cy="5" r="0.5" fill="currentColor"/><circle cx="12" cy="19" r="0.5" fill="currentColor"/></svg>',
+  info: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="8" r="0.5" fill="currentColor"/></svg>',
+  warning: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 4.1l-7.5 13a2 2 0 001.7 3h15a2 2 0 001.7-3l-7.5-13a2 2 0 00-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="16.5" r="0.5" fill="currentColor"/></svg>',
+  tip: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1.2 2.1h4.6c.2-.9.6-1.6 1.2-2.1A6 6 0 0012 3z"/></svg>',
+  danger: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 
 const ITEMS: SlashItem[] = [
@@ -113,6 +117,34 @@ const ITEMS: SlashItem[] = [
     keywords: ['divider', 'hr', 'rule', 'separator', '---'],
     icon: ICON.divider,
     run: (e, r) => e.chain().focus().deleteRange(r).setHorizontalRule().run(),
+  },
+  {
+    title: 'Info callout',
+    hint: 'Highlighted info panel',
+    keywords: ['info', 'callout', 'note', 'panel'],
+    icon: ICON.info,
+    run: (e, r) => e.chain().focus().deleteRange(r).setCallout({ type: 'info' }).run(),
+  },
+  {
+    title: 'Warning callout',
+    hint: 'Highlighted warning panel',
+    keywords: ['warning', 'callout', 'caution', 'panel'],
+    icon: ICON.warning,
+    run: (e, r) => e.chain().focus().deleteRange(r).setCallout({ type: 'warning' }).run(),
+  },
+  {
+    title: 'Tip callout',
+    hint: 'Highlighted tip panel',
+    keywords: ['tip', 'callout', 'hint', 'success', 'panel'],
+    icon: ICON.tip,
+    run: (e, r) => e.chain().focus().deleteRange(r).setCallout({ type: 'tip' }).run(),
+  },
+  {
+    title: 'Danger callout',
+    hint: 'Highlighted danger panel',
+    keywords: ['danger', 'callout', 'error', 'critical', 'panel'],
+    icon: ICON.danger,
+    run: (e, r) => e.chain().focus().deleteRange(r).setCallout({ type: 'danger' }).run(),
   },
 ];
 
