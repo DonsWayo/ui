@@ -8,6 +8,9 @@
 		CardHeader,
 		CardTitle,
 	} from '$lib/index.js';
+	import { RichEditor } from '$lib/editor.js';
+
+	let docTitle = $state('');
 </script>
 
 <div class="container mx-auto space-y-8 p-8">
@@ -56,6 +59,24 @@
 					<p>More card content here.</p>
 				</CardContent>
 			</Card>
+		</div>
+	</section>
+
+	<section class="space-y-4">
+		<h2 class="text-2xl font-semibold">Document editor (wiki mode)</h2>
+		<p class="text-muted-foreground text-sm">
+			Full-page document canvas with floating pill toolbar and <code>/</code> slash commands.
+		</p>
+		<div class="border-border bg-card rounded-xl border px-8 sm:px-16">
+			<div class="mx-auto max-w-3xl">
+				<input
+					type="text"
+					bind:value={docTitle}
+					placeholder="Untitled"
+					class="text-foreground placeholder:text-muted-foreground/30 mt-10 h-auto w-full border-none bg-transparent px-0 text-4xl leading-tight font-bold shadow-none outline-none"
+				/>
+				<RichEditor mode="document" placeholder="Start writing… or type / for commands" />
+			</div>
 		</div>
 	</section>
 </div>

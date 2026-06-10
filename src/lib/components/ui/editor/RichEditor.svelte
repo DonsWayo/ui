@@ -21,14 +21,18 @@
   import TaskItem from '@tiptap/extension-task-item';
   import Mention from '@tiptap/extension-mention';
   import { createMentionSuggestion } from './mention-suggestion.js';
+  import { SlashCommands } from './slash-commands.js';
 
   /**
    * mode:
-   *  'full'     — wiki editor: full toolbar + all extensions
+   *  'document' — wiki pages: full-page document canvas (Notion/Confluence
+   *               feel) — borderless, floating pill toolbar, document-scale
+   *               typography, `/` slash-command block menu
+   *  'full'     — bordered editor with full toolbar + all extensions
    *  'standard' — issues/PRs: toolbar without table controls
    *  'minimal'  — comments: no toolbar, just formatting via shortcuts
    */
-  type Mode = 'full' | 'standard' | 'minimal';
+  type Mode = 'document' | 'full' | 'standard' | 'minimal';
 
   type Props = {
     content?: Record<string, unknown> | null;
@@ -98,7 +102,7 @@
 
   onMount(() => {
     const extensions: any[] = [
-      StarterKit.configure({ link: false, codeBlock: false }),
+      StarterKit.configure({ link: false, codeBlock: false, underline: false }),
       Placeholder.configure({ placeholder }),
       Link.configure({ openOnClick: false }),
       Underline,
@@ -114,13 +118,17 @@
       CharacterCount,
     ];
 
-    if (mode === 'full') {
+    if (mode === 'full' || mode === 'document') {
       extensions.push(
         Table.configure({ resizable: true }),
         TableRow,
         TableHeader,
         TableCell,
       );
+    }
+
+    if (mode === 'document') {
+      extensions.push(SlashCommands);
     }
 
     if (mentionsUrl) {
@@ -272,8 +280,8 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
     </button>
 
-    <!-- Full mode extras: table insert -->
-    {#if mode === 'full'}
+    <!-- Full/document mode extras: table insert -->
+    {#if mode === 'full' || mode === 'document'}
     <button type="button" title="Insert table" class="re-btn" onclick={() => cmd(() => editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run())}>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
     </button>
@@ -337,6 +345,46 @@
   .rich-editor[data-bordered="false"] .re-toolbar {
     border-bottom: 1px solid var(--border);
     background: transparent;
+  }
+
+  /* ── Document mode — full-page canvas, floating pill toolbar ── */
+  .rich-editor[data-mode="document"] {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
+  }
+  .rich-editor[data-mode="document"] .re-toolbar {
+    position: sticky;
+    top: 0.75rem;
+    z-index: 30;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 5px 10px;
+    gap: 2px;
+    border: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-radius: 9999px;
+    background: color-mix(in oklch, var(--card) 86%, transparent);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.05),
+      0 14px 36px -14px rgba(0, 0, 0, 0.22);
+  }
+  .rich-editor[data-mode="document"] .re-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 9999px;
+  }
+  .rich-editor[data-mode="document"] .re-heading-btn {
+    width: auto;
+    padding: 0 9px;
+  }
+  .rich-editor[data-mode="document"] .re-word-count {
+    padding-left: 6px;
+    padding-right: 6px;
   }
 
   /* ── Toolbar ── */
@@ -499,6 +547,13 @@
   }
   .rich-editor[data-mode="full"] .re-content { min-height: 300px; padding: 20px 24px; }
   .rich-editor[data-mode="minimal"] .re-content { padding: 8px 12px; min-height: 60px; }
+  .rich-editor[data-mode="document"] .re-content {
+    min-height: 55vh;
+    /* Generous bottom run-out so the last line never sits at the viewport
+       edge — the document-editor feel (Notion/Confluence do the same). */
+    padding: 2.25rem 0 25vh;
+    overflow-y: visible;
+  }
 
   :global(.rich-editor .ProseMirror) { outline: none; }
   :global(.rich-editor .ProseMirror p.is-editor-empty:first-child::before) {
@@ -550,6 +605,75 @@
     background: color-mix(in oklch, var(--primary) 12%, transparent);
     color: var(--primary); cursor: pointer;
   }
+
+  /* ── Document mode typography — page scale, not comment scale ── */
+  :global(.rich-editor[data-mode="document"] .ProseMirror) {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    caret-color: var(--primary);
+  }
+  :global(.rich-editor[data-mode="document"] .ProseMirror h1) {
+    font-size: 2rem; font-weight: 700; letter-spacing: -0.02em;
+    margin: 2rem 0 0.6rem; line-height: 1.25;
+  }
+  :global(.rich-editor[data-mode="document"] .ProseMirror h2) {
+    font-size: 1.5rem; font-weight: 700; letter-spacing: -0.015em;
+    margin: 1.75rem 0 0.5rem; line-height: 1.3;
+  }
+  :global(.rich-editor[data-mode="document"] .ProseMirror h3) {
+    font-size: 1.2rem; font-weight: 600;
+    margin: 1.4rem 0 0.4rem; line-height: 1.35;
+  }
+  :global(.rich-editor[data-mode="document"] .ProseMirror p) { margin: 0.55rem 0; }
+  :global(.rich-editor[data-mode="document"] .ProseMirror ul),
+  :global(.rich-editor[data-mode="document"] .ProseMirror ol) { margin: 0.5rem 0; }
+  :global(.rich-editor[data-mode="document"] .ProseMirror li) { margin: 0.2rem 0; }
+  :global(.rich-editor[data-mode="document"] .ProseMirror blockquote) {
+    border-left-color: color-mix(in oklch, var(--primary) 45%, var(--border));
+    padding: 0.25rem 0 0.25rem 1.25rem; margin: 1rem 0;
+  }
+  :global(.rich-editor[data-mode="document"] .ProseMirror pre) {
+    padding: 16px 20px; margin: 1rem 0; border-radius: 8px;
+  }
+  :global(.rich-editor[data-mode="document"] .ProseMirror table) { margin: 1rem 0; }
+  :global(.rich-editor[data-mode="document"] .ProseMirror hr) {
+    border: none; height: 1px; margin: 2rem 0;
+    background: linear-gradient(to right, transparent, var(--border) 15%, var(--border) 85%, transparent);
+  }
+  :global(.rich-editor[data-mode="document"] .ProseMirror hr.ProseMirror-selectednode) {
+    background: var(--primary);
+  }
+  :global(.rich-editor[data-mode="document"] .ProseMirror ::selection) {
+    background: color-mix(in oklch, var(--primary) 18%, transparent);
+  }
+  /* Empty-paragraph slash hint: nudge writers toward the block menu. */
+  :global(.rich-editor[data-mode="document"] .ProseMirror p.is-editor-empty:first-child::before) {
+    opacity: 0.35;
+  }
+
+  /* ── Slash-command menu (mounts on body via tippy) ── */
+  :global(.slash-menu) {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.16);
+    overflow-y: auto; min-width: 240px; max-height: 320px; padding: 4px;
+  }
+  :global(.slash-menu-empty) { padding: 10px 14px; font-size: 13px; color: var(--muted-foreground); }
+  :global(.slash-menu-item) {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 6px 8px; border: none; background: transparent;
+    border-radius: 6px; text-align: left; cursor: pointer; transition: background 0.1s;
+  }
+  :global(.slash-menu-item:hover), :global(.slash-menu-item.is-selected) { background: var(--muted); }
+  :global(.slash-menu-icon) {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; flex-shrink: 0;
+    border: 1px solid var(--border); border-radius: 6px;
+    background: var(--background); color: var(--muted-foreground);
+  }
+  :global(.slash-menu-item.is-selected .slash-menu-icon) { color: var(--foreground); }
+  :global(.slash-menu-info) { display: flex; flex-direction: column; min-width: 0; }
+  :global(.slash-menu-title) { font-size: 13px; font-weight: 500; color: var(--foreground); }
+  :global(.slash-menu-hint) { font-size: 11px; color: var(--muted-foreground); }
 
   /* Mention dropdown (tippy) */
   :global(.mention-list) {
