@@ -12,22 +12,12 @@
 		class?: string;
 	};
 
-	let {
-		size = 'md',
-		label,
-		class: className,
-		onclick,
-		...restProps
-	}: Props = $props();
+	let { size = 'md', label, class: className, onclick, ...restProps }: Props = $props();
 
 	const ctx = getThemeContext();
 
-	const sizeClass = $derived(
-		size === 'sm' ? 'h-7 w-7' : size === 'lg' ? 'h-10 w-10' : 'h-9 w-9',
-	);
-	const iconClass = $derived(
-		size === 'sm' ? 'size-3.5' : size === 'lg' ? 'size-5' : 'size-4',
-	);
+	const sizeClass = $derived(size === 'sm' ? 'h-7 w-7' : size === 'lg' ? 'h-10 w-10' : 'h-9 w-9');
+	const iconClass = $derived(size === 'sm' ? 'size-3.5' : size === 'lg' ? 'size-5' : 'size-4');
 
 	const ariaLabel = $derived(
 		label ??

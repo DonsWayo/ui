@@ -31,11 +31,7 @@
 	let parse = $state<((md: string) => string) | null>(null);
 	let sanitize = $state<((html: string) => string) | null>(null);
 
-	let html = $derived(
-		parse && sanitize
-			? sanitize(parse(content))
-			: '',
-	);
+	let html = $derived(parse && sanitize ? sanitize(parse(content)) : '');
 
 	function readDarkMode(): boolean {
 		if (typeof document === 'undefined') return false;
@@ -92,9 +88,7 @@
 				const pre = block.parentElement;
 				if (!pre || pre.dataset.shikiDone === 'true') continue;
 
-				const langClass = Array.from(block.classList).find((c) =>
-					c.startsWith('language-'),
-				);
+				const langClass = Array.from(block.classList).find((c) => c.startsWith('language-'));
 				const requested = langClass ? langClass.slice('language-'.length) : 'plaintext';
 
 				await loadLanguage(requested);
@@ -126,8 +120,8 @@
 	});
 </script>
 
-<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 <div bind:this={host} class="md-body" data-theme={isDark ? 'dark' : 'light'}>
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html html}
 </div>
 

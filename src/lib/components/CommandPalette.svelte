@@ -40,15 +40,17 @@
 		closeOnSelect = true,
 	}: Props = $props();
 
-	// Group items by `group` (default group = "")
+	// Group items by `group` (default group = ""). Uses an insertion-ordered
+	// plain object as an ephemeral accumulator — this is a pure derivation, not
+	// reactive state, so a SvelteMap isn't needed (and a built-in Map would trip
+	// svelte/prefer-svelte-reactivity).
 	const grouped = $derived.by(() => {
-		const map = new Map<string, CommandPaletteItem[]>();
+		const groups: Record<string, CommandPaletteItem[]> = {};
 		for (const item of items) {
 			const g = item.group ?? '';
-			if (!map.has(g)) map.set(g, []);
-			map.get(g)!.push(item);
+			(groups[g] ??= []).push(item);
 		}
-		return Array.from(map.entries());
+		return Object.entries(groups) as [string, CommandPaletteItem[]][];
 	});
 
 	function handleSelect(item: CommandPaletteItem) {
@@ -81,9 +83,7 @@
 					/>
 				</div>
 				<CommandPrimitive.List class="max-h-80 overflow-y-auto p-1">
-					<CommandPrimitive.Empty
-						class="text-muted-foreground py-6 text-center text-sm"
-					>
+					<CommandPrimitive.Empty class="text-muted-foreground py-6 text-center text-sm">
 						{emptyMessage}
 					</CommandPrimitive.Empty>
 					<CommandPrimitive.Viewport>

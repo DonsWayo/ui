@@ -1,6 +1,6 @@
 <script lang="ts" module>
-	import type { DateRange } from 'bits-ui';
-	export type { DateRange };
+	import type { DateRange as BitsDateRange } from 'bits-ui';
+	export type DateRange = BitsDateRange;
 
 	export type DateRangePreset = {
 		label: string;
@@ -20,8 +20,7 @@
 			label: '7d',
 			range: () => {
 				const end = new Date();
-				const start = new Date();
-				start.setDate(end.getDate() - 6);
+				const start = new Date(end.getFullYear(), end.getMonth(), end.getDate() - 6);
 				return { start, end };
 			},
 		},
@@ -29,8 +28,7 @@
 			label: '30d',
 			range: () => {
 				const end = new Date();
-				const start = new Date();
-				start.setDate(end.getDate() - 29);
+				const start = new Date(end.getFullYear(), end.getMonth(), end.getDate() - 29);
 				return { start, end };
 			},
 		},

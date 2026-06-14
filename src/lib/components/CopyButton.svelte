@@ -78,7 +78,7 @@
 	onclick={copy}
 	data-slot="copy-button"
 	data-copied={copied ? '' : undefined}
-	aria-label={ariaLabel ?? (iconOnly ? (copied ? copiedLabel : (label || 'Copy')) : undefined)}
+	aria-label={ariaLabel ?? (iconOnly ? (copied ? copiedLabel : label || 'Copy') : undefined)}
 	class={cn(className)}
 	{...restProps}
 >

@@ -24,9 +24,7 @@
 	const fieldId = $derived(htmlFor ?? `field-${uid}`);
 	const errorId = $derived(`${fieldId}-error`);
 	const hintId = $derived(`${fieldId}-hint`);
-	const describedBy = $derived(
-		error ? errorId : hint ? hintId : undefined,
-	);
+	const describedBy = $derived(error ? errorId : hint ? hintId : undefined);
 	const invalid = $derived(Boolean(error));
 </script>
 
