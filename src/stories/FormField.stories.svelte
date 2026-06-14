@@ -19,7 +19,12 @@
 
 <Story name="With Hint">
 	{#snippet children(args)}
-		<FormField label="Username" for="username-hint" hint="Must be between 3–20 characters" {...args}>
+		<FormField
+			label="Username"
+			for="username-hint"
+			hint="Must be between 3–20 characters"
+			{...args}
+		>
 			<Input id="username-hint" placeholder="Enter a username" />
 		</FormField>
 	{/snippet}

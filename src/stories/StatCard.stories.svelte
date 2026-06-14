@@ -14,7 +14,10 @@
 	{/snippet}
 </Story>
 
-<Story name="With Hint" args={{ value: '$12.50', label: 'Monthly Cost', hint: '↓ 8% from last month' }}>
+<Story
+	name="With Hint"
+	args={{ value: '$12.50', label: 'Monthly Cost', hint: '↓ 8% from last month' }}
+>
 	{#snippet children(args)}
 		<StatCard {...args} />
 	{/snippet}

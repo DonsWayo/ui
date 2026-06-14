@@ -11,7 +11,10 @@
 	});
 </script>
 
-<Story name="Default" args={{ title: 'No results found', description: 'Try adjusting your search terms.' }}>
+<Story
+	name="Default"
+	args={{ title: 'No results found', description: 'Try adjusting your search terms.' }}
+>
 	{#snippet children(args)}
 		<EmptyState {...args} />
 	{/snippet}
