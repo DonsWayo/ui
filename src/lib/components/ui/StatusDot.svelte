@@ -41,11 +41,11 @@
 		closed: 'bg-muted-foreground',
 		paused: 'bg-muted-foreground',
 		terminated: 'bg-muted-foreground',
-		running: 'bg-blue-500',
-		merged: 'bg-purple-500',
+		running: 'bg-blue-500 dark:bg-blue-400',
+		merged: 'bg-purple-500 dark:bg-purple-400',
 		failed: 'bg-destructive',
 		error: 'bg-destructive',
-		warning: 'bg-yellow-500',
+		warning: 'bg-warning',
 	};
 
 	const resolvedColor = $derived(
