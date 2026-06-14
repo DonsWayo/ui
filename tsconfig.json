@@ -12,6 +12,7 @@
 		"declaration": true,
 		"declarationMap": true,
 		"outDir": "./dist",
+		"rootDir": "./src",
 		"paths": {
 			"$lib": ["./src/lib"],
 			"$lib/*": ["./src/lib/*"]
