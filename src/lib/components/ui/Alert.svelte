@@ -12,8 +12,7 @@
 		variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
 		title?: string;
 		children?: Snippet;
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		icon?: any;
+		icon?: Component;
 		class?: string;
 	} = $props();
 

@@ -1,13 +1,27 @@
-import tippy, { type Instance, type Props as TippyProps } from 'tippy.js';
+import type { SuggestionKeyDownProps, SuggestionProps } from '@tiptap/suggestion';
+import tippy, {
+	type GetReferenceClientRect,
+	type Instance,
+	type Props as TippyProps,
+} from 'tippy.js';
 
 export type MentionItem = {
 	id: string;
 	label: string;
-	type?: 'user' | 'team';
+	type?: 'user' | 'team' | 'hint';
 	slug?: string;
 	avatar_url?: string;
 	sublabel?: string;
 };
+
+type MentionAttrs = {
+	id: string;
+	label: string;
+	type?: MentionItem['type'];
+	slug?: string;
+};
+
+type MentionRenderProps = SuggestionProps<MentionItem, MentionAttrs>;
 
 function escapeHtml(text: string): string {
 	const div = document.createElement('div');
@@ -36,7 +50,7 @@ function createDropdown(props: { items: MentionItem[]; command: (item: MentionIt
 			el.innerHTML = `<div class="mention-list-empty">No results</div>`;
 			return;
 		}
-		if (items.length === 1 && (items[0] as any).type === 'hint') {
+		if (items.length === 1 && items[0].type === 'hint') {
 			el.innerHTML = `<div class="mention-list-empty">${escapeHtml(items[0].label)}</div>`;
 			return;
 		}
@@ -111,7 +125,7 @@ export function createMentionSuggestion(mentionsUrl: string) {
 		allowSpaces: false,
 		items: async ({ query }: { query: string }): Promise<MentionItem[]> => {
 			if (!query || query.length < 1) {
-				return [{ id: 'hint', label: 'Type to search users…', type: 'user' } as any];
+				return [{ id: 'hint', label: 'Type to search users…', type: 'hint' }];
 			}
 			try {
 				const sep = mentionsUrl.includes('?') ? '&' : '?';
@@ -130,7 +144,7 @@ export function createMentionSuggestion(mentionsUrl: string) {
 			let popup: Instance<TippyProps>[];
 
 			return {
-				onStart(props: any) {
+				onStart(props: MentionRenderProps) {
 					dropdown = createDropdown({
 						items: props.items,
 						command: (item) =>
@@ -138,7 +152,9 @@ export function createMentionSuggestion(mentionsUrl: string) {
 					});
 					if (!props.clientRect) return;
 					popup = tippy('body', {
-						getReferenceClientRect: props.clientRect,
+						// TipTap's clientRect can return null, but during an active
+						// suggestion it always yields a rect; tippy's type is stricter.
+						getReferenceClientRect: props.clientRect as GetReferenceClientRect,
 						appendTo: () => document.body,
 						content: dropdown.el,
 						showOnCreate: true,
@@ -147,15 +163,17 @@ export function createMentionSuggestion(mentionsUrl: string) {
 						placement: 'bottom-start',
 					}) as Instance<TippyProps>[];
 				},
-				onUpdate(props: any) {
+				onUpdate(props: MentionRenderProps) {
 					dropdown.update(props.items, (item) =>
 						props.command({ id: item.id, label: item.label, type: item.type, slug: item.slug }),
 					);
 					if (props.clientRect && popup?.[0]) {
-						popup[0].setProps({ getReferenceClientRect: props.clientRect });
+						popup[0].setProps({
+							getReferenceClientRect: props.clientRect as GetReferenceClientRect,
+						});
 					}
 				},
-				onKeyDown(props: any) {
+				onKeyDown(props: SuggestionKeyDownProps) {
 					if (props.event.key === 'Escape') {
 						popup?.[0]?.hide();
 						return true;

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Component } from 'svelte';
 	import { Check, X, AlertTriangle, Clock, Loader2 } from '@lucide/svelte';
 	import { cn } from '$lib/utils/cn.js';
 
@@ -8,7 +9,7 @@
 		time?: string;
 		title: string;
 		description?: string;
-		icon?: any;
+		icon?: Component;
 		status?: Status;
 	};
 
@@ -30,7 +31,7 @@
 </script>
 
 <ol class={cn('flex flex-col', className)}>
-	{#each items as item, i}
+	{#each items as item, i (item)}
 		{@const isLast = i === items.length - 1}
 		{@const status = item.status}
 		<li class="relative flex gap-4">

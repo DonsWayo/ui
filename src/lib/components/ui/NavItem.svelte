@@ -1,11 +1,12 @@
 <script lang="ts">
+	import type { Component } from 'svelte';
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
 	import { cn } from '$lib/utils/cn.js';
 
 	type Props = HTMLAnchorAttributes & {
 		href: string;
 		label: string;
-		icon?: any;
+		icon?: Component;
 		active?: boolean;
 		collapsed?: boolean;
 	};

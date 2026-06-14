@@ -47,7 +47,7 @@
 		<ChevronLeft size={15} />
 	</button>
 
-	{#each visiblePages as p}
+	{#each visiblePages as p, i (i)}
 		{#if p === '...'}
 			<span class="flex h-8 w-8 items-center justify-center text-[13px] text-muted-foreground">
 				…

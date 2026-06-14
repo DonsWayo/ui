@@ -44,7 +44,7 @@
 	</div>
 
 	<!-- filter chips -->
-	{#each filters as filter}
+	{#each filters as filter (filter.key)}
 		<span
 			class="inline-flex items-center gap-1 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[12px] font-medium text-foreground"
 		>

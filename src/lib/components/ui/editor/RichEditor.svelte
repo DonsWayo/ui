@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { Editor } from '@tiptap/core';
+	import { Editor, type Extensions } from '@tiptap/core';
+	import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
 	import StarterKit from '@tiptap/starter-kit';
 	import Placeholder from '@tiptap/extension-placeholder';
 	import Link from '@tiptap/extension-link';
@@ -100,7 +101,7 @@
 	}
 
 	onMount(() => {
-		const extensions: any[] = [
+		const extensions: Extensions = [
 			StarterKit.configure({ link: false, codeBlock: false }),
 			Placeholder.configure({ placeholder }),
 			Link.configure({ openOnClick: false }),
@@ -125,7 +126,7 @@
 			extensions.push(
 				Mention.configure({
 					HTMLAttributes: { class: 'mention' },
-					renderHTML: ({ node }: any) => [
+					renderHTML: ({ node }: { node: ProseMirrorNode }) => [
 						'span',
 						{
 							class:

@@ -19,7 +19,7 @@
 
 	const entries = $derived(
 		Object.entries(permissions ?? {})
-			.filter(([_, v]) => typeof v === 'string' && v !== 'none')
+			.filter(([, v]) => typeof v === 'string' && v !== 'none')
 			.sort(([a], [b]) => a.localeCompare(b)),
 	);
 </script>
@@ -28,7 +28,7 @@
 	<span class="text-[11px] italic text-muted-foreground">No write access requested.</span>
 {:else if compact}
 	<div class="flex flex-wrap gap-1">
-		{#each entries as [key, level]}
+		{#each entries as [key, level] (key)}
 			<span class="rounded-md border border-border/60 bg-muted/40 px-1.5 py-0.5 text-[11px]">
 				<code class="font-mono">{key}</code>:{level}
 			</span>
@@ -36,7 +36,7 @@
 	</div>
 {:else}
 	<ul class="space-y-1.5">
-		{#each entries as [key, level]}
+		{#each entries as [key, level] (key)}
 			<li
 				class="flex items-center justify-between gap-3 rounded-md border border-border/60 bg-muted/30 px-3 py-1.5 text-xs"
 			>
