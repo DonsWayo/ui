@@ -1,11 +1,6 @@
 <script module>
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import {
-		Select,
-		SelectContent,
-		SelectItem,
-		SelectTrigger,
-	} from '$lib/index.js';
+	import { Select, SelectContent, SelectItem, SelectTrigger } from '$lib/index.js';
 
 	const { Story } = defineMeta({
 		title: 'Components/Select',

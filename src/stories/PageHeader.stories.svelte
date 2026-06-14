@@ -15,7 +15,10 @@
 	{/snippet}
 </Story>
 
-<Story name="With Subtitle" args={{ title: 'Repositories', subtitle: 'All repositories in your workspace' }}>
+<Story
+	name="With Subtitle"
+	args={{ title: 'Repositories', subtitle: 'All repositories in your workspace' }}
+>
 	{#snippet children(args)}
 		<PageHeader {...args} />
 	{/snippet}

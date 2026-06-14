@@ -22,7 +22,9 @@
 
 <Story name="With Label" args={{}}>
 	{#snippet children(args)}
-		<div class="flex items-center gap-2 rounded-md border border-border px-3 py-2 font-mono text-sm">
+		<div
+			class="flex items-center gap-2 rounded-md border border-border px-3 py-2 font-mono text-sm"
+		>
 			<span class="flex-1 text-foreground">npm install @nucel/ui</span>
 			<CopyButton text="npm install @nucel/ui" />
 		</div>

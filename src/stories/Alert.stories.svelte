@@ -17,33 +17,23 @@
 </script>
 
 <Story name="Default">
-	<Alert>
-		Your changes have been saved.
-	</Alert>
+	<Alert>Your changes have been saved.</Alert>
 </Story>
 
 <Story name="Destructive">
-	<Alert variant="destructive">
-		Something went wrong. Please try again.
-	</Alert>
+	<Alert variant="destructive">Something went wrong. Please try again.</Alert>
 </Story>
 
 <Story name="Success">
-	<Alert variant="success">
-		Your account has been created successfully.
-	</Alert>
+	<Alert variant="success">Your account has been created successfully.</Alert>
 </Story>
 
 <Story name="Warning">
-	<Alert variant="warning">
-		Your trial ends in 3 days. Upgrade to keep your agents running.
-	</Alert>
+	<Alert variant="warning">Your trial ends in 3 days. Upgrade to keep your agents running.</Alert>
 </Story>
 
 <Story name="Info">
-	<Alert variant="info">
-		A new version of the agent runtime is available.
-	</Alert>
+	<Alert variant="info">A new version of the agent runtime is available.</Alert>
 </Story>
 
 <Story name="With Title">
@@ -61,9 +51,7 @@
 <Story name="All Variants">
 	<div class="flex flex-col gap-3">
 		<Alert>Default — system notification with no urgency.</Alert>
-		<Alert variant="info" icon={AlertCircle}>
-			Info — informational message for the user.
-		</Alert>
+		<Alert variant="info" icon={AlertCircle}>Info — informational message for the user.</Alert>
 		<Alert variant="success" title="Deployment complete">
 			Your agent was deployed and is now live.
 		</Alert>

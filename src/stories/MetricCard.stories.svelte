@@ -70,12 +70,7 @@
 				trend="down"
 				data={[80, 70, 65, 60, 55, 48, 42]}
 			/>
-			<MetricCard
-				value="7"
-				label="Active Agents"
-				trend="neutral"
-				data={[7, 6, 8, 7, 7, 6, 7]}
-			/>
+			<MetricCard value="7" label="Active Agents" trend="neutral" data={[7, 6, 8, 7, 7, 6, 7]} />
 		</div>
 	{/snippet}
 </Story>

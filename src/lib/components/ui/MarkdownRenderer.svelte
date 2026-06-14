@@ -5,7 +5,9 @@
 	let { content = '' }: { content?: string } = $props();
 
 	let html = $derived(
-		content ? DOMPurify.sanitize(marked.parse(content, { gfm: true, breaks: false }) as string) : '',
+		content
+			? DOMPurify.sanitize(marked.parse(content, { gfm: true, breaks: false }) as string)
+			: '',
 	);
 </script>
 

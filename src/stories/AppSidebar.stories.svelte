@@ -11,7 +11,9 @@
 
 <Story name="Expanded">
 	{#snippet children()}
-		<div style="height: 400px; display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
+		<div
+			style="height: 400px; display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;"
+		>
 			<AppSidebar collapsed={false}>
 				{#snippet brand({ collapsed })}
 					{#if !collapsed}
@@ -33,7 +35,9 @@
 
 <Story name="Collapsed">
 	{#snippet children()}
-		<div style="height: 400px; display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
+		<div
+			style="height: 400px; display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;"
+		>
 			<AppSidebar collapsed={true}>
 				{#snippet brand({ collapsed })}
 					{#if !collapsed}
@@ -55,7 +59,9 @@
 
 <Story name="WithFooter">
 	{#snippet children()}
-		<div style="height: 400px; display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
+		<div
+			style="height: 400px; display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;"
+		>
 			<AppSidebar collapsed={false}>
 				{#snippet brand({ collapsed })}
 					{#if !collapsed}
