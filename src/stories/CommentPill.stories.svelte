@@ -15,7 +15,17 @@
 	{/snippet}
 </Story>
 
-<Story name="Zero (hidden)" args={{ count: 0 }} parameters={{ docs: { description: { story: 'count=0 renders nothing — the component is intentionally invisible at zero.' } } }}>
+<Story
+	name="Zero (hidden)"
+	args={{ count: 0 }}
+	parameters={{
+		docs: {
+			description: {
+				story: 'count=0 renders nothing — the component is intentionally invisible at zero.',
+			},
+		},
+	}}
+>
 	{#snippet children(args)}
 		<CommentPill {...args} />
 	{/snippet}

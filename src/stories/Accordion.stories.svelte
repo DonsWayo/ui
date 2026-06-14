@@ -19,7 +19,11 @@
 		// Click the first trigger to open it
 		await userEvent.click(triggers[0]);
 		// The accordion content should now be visible in the DOM
-		await expect(canvas.getByText('Nucel is an AI agent platform that lets you run autonomous agents across your repositories.')).toBeVisible();
+		await expect(
+			canvas.getByText(
+				'Nucel is an AI agent platform that lets you run autonomous agents across your repositories.',
+			),
+		).toBeVisible();
 	}}
 >
 	{#snippet children(args)}
@@ -27,14 +31,15 @@
 			<AccordionItem value="item-1">
 				<AccordionTrigger>What is Nucel?</AccordionTrigger>
 				<AccordionContent>
-					Nucel is an AI agent platform that lets you run autonomous agents across your repositories.
+					Nucel is an AI agent platform that lets you run autonomous agents across your
+					repositories.
 				</AccordionContent>
 			</AccordionItem>
 			<AccordionItem value="item-2">
 				<AccordionTrigger>How do agents work?</AccordionTrigger>
 				<AccordionContent>
-					Agents are triggered by events in your connected tools and autonomously complete tasks like reviewing
-					code, triaging issues, and drafting pull requests.
+					Agents are triggered by events in your connected tools and autonomously complete tasks
+					like reviewing code, triaging issues, and drafting pull requests.
 				</AccordionContent>
 			</AccordionItem>
 			<AccordionItem value="item-3">
@@ -65,8 +70,8 @@
 			<AccordionItem value="item-3">
 				<AccordionTrigger>Is this useful for settings panels?</AccordionTrigger>
 				<AccordionContent>
-					Absolutely — multiple mode works great for settings or filter panels where several sections
-					need to stay open simultaneously.
+					Absolutely — multiple mode works great for settings or filter panels where several
+					sections need to stay open simultaneously.
 				</AccordionContent>
 			</AccordionItem>
 		</Accordion>

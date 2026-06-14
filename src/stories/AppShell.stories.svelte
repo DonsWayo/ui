@@ -12,7 +12,9 @@
 
 <Story name="WithSidebar">
 	{#snippet children()}
-		<div style="height: 400px; overflow: hidden; border: 1px solid var(--border); border-radius: 8px;">
+		<div
+			style="height: 400px; overflow: hidden; border: 1px solid var(--border); border-radius: 8px;"
+		>
 			<AppShell>
 				{#snippet sidebar()}
 					<AppSidebar>
@@ -44,7 +46,9 @@
 
 <Story name="WithoutSidebar">
 	{#snippet children()}
-		<div style="height: 400px; overflow: hidden; border: 1px solid var(--border); border-radius: 8px;">
+		<div
+			style="height: 400px; overflow: hidden; border: 1px solid var(--border); border-radius: 8px;"
+		>
 			<AppShell>
 				{#snippet header()}
 					<span class="text-sm font-medium text-foreground">Page Title</span>

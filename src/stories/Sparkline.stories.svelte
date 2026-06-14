@@ -18,13 +18,27 @@
 	{/snippet}
 </Story>
 
-<Story name="Trending Down" args={{ data: [9, 7, 8, 5, 6, 3, 2], color: 'stroke-destructive', fillColor: 'fill-destructive/10' }}>
+<Story
+	name="Trending Down"
+	args={{
+		data: [9, 7, 8, 5, 6, 3, 2],
+		color: 'stroke-destructive',
+		fillColor: 'fill-destructive/10',
+	}}
+>
 	{#snippet children(args)}
 		<Sparkline {...args} />
 	{/snippet}
 </Story>
 
-<Story name="Flat Line" args={{ data: [4, 4, 4, 4, 4, 4, 4], color: 'stroke-muted-foreground', fillColor: 'fill-muted/10' }}>
+<Story
+	name="Flat Line"
+	args={{
+		data: [4, 4, 4, 4, 4, 4, 4],
+		color: 'stroke-muted-foreground',
+		fillColor: 'fill-muted/10',
+	}}
+>
 	{#snippet children(args)}
 		<Sparkline {...args} />
 	{/snippet}
