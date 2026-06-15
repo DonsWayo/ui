@@ -422,3 +422,19 @@ export {
 } from './components/ui/table/index.js';
 // ReactionBar — emoji reactions control
 export { default as ReactionBar } from './components/ReactionBar.svelte';
+
+// ---- 0.21.0 additions ----
+
+// Switch — shadcn-styled toggle over bits-ui Switch. Replaces the app's
+// ad-hoc Switch (frontend/src/lib/ui/Switch.svelte).
+export { default as Switch } from './components/Switch.svelte';
+
+// ConfirmDialog — high-level confirmation dialog over bits-ui AlertDialog.
+// Supports destructive styling, a loading/busy state (disables + spinner), and
+// an optional type-to-confirm guard (`confirmText`) for delete-style flows.
+// Replaces ~16 window.confirm() sites and the hand-rolled admin confirm modals.
+export { default as ConfirmDialog } from './components/ConfirmDialog.svelte';
+
+// Popover — shadcn-styled popover over bits-ui Popover, for avatar/create
+// menus where DropdownMenu's menuitem semantics don't fit.
+export { default as Popover } from './components/Popover.svelte';
