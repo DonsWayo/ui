@@ -101,6 +101,7 @@
 
 			ready = true;
 		}).catch((err) => {
+			// eslint-disable-next-line no-console
 			console.error('[@nucel/ui] Monaco failed to load', err);
 		});
 
@@ -151,7 +152,10 @@
 <div
 	bind:this={container}
 	data-slot="code-editor"
-	class={cn('border-border bg-background relative overflow-hidden rounded-lg border', className)}
+	class={cn(
+		'border-border bg-background relative overflow-hidden rounded-lg border',
+		className,
+	)}
 	style="height: {height};"
 	role="group"
 	aria-label={ariaLabel ?? `Code editor (${language})`}

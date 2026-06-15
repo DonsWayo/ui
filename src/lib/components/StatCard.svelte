@@ -41,7 +41,9 @@
 
 	const trendColor = $derived.by(() => {
 		if (computedTrend === 'flat') return 'text-muted-foreground';
-		return trendIsGood ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive';
+		return trendIsGood
+			? 'text-emerald-600 dark:text-emerald-400'
+			: 'text-destructive';
 	});
 
 	const formattedDelta = $derived.by(() => {

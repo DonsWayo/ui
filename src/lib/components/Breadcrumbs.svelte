@@ -27,13 +27,18 @@
 			<li class="inline-flex items-center gap-1.5">
 				{#if isLast || !item.href}
 					<span
-						class={cn(isLast ? 'text-foreground font-medium' : 'text-muted-foreground')}
+						class={cn(
+							isLast ? 'text-foreground font-medium' : 'text-muted-foreground',
+						)}
 						aria-current={isLast ? 'page' : undefined}
 					>
 						{item.label}
 					</span>
 				{:else}
-					<a href={item.href} class="hover:text-foreground transition-colors">
+					<a
+						href={item.href}
+						class="hover:text-foreground transition-colors"
+					>
 						{item.label}
 					</a>
 				{/if}

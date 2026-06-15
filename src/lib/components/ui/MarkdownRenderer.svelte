@@ -7,6 +7,7 @@
 		SHIKI_LIGHT_THEME,
 		SHIKI_DARK_THEME,
 	} from '../../utils/shikiHighlighter.js';
+	import { sanitizeMarkdownHtml } from '../../utils/markdownSanitize.js';
 
 	let {
 		content,
@@ -31,7 +32,11 @@
 	let parse = $state<((md: string) => string) | null>(null);
 	let sanitize = $state<((html: string) => string) | null>(null);
 
-	let html = $derived(parse && sanitize ? sanitize(parse(content)) : '');
+	let html = $derived(
+		parse && sanitize
+			? sanitize(parse(content))
+			: '',
+	);
 
 	function readDarkMode(): boolean {
 		if (typeof document === 'undefined') return false;
@@ -55,11 +60,9 @@
 				import('dompurify'),
 			]);
 			parse = (md: string) => marked.parse(md, { gfm: true, breaks: false }) as string;
-			sanitize = (h: string) =>
-				DOMPurify.sanitize(h, {
-					// Allow Shiki's inline style attributes on spans (colour tokens).
-					ADD_ATTR: ['style', 'data-line', 'data-language'],
-				});
+			// Hardened sanitizer config lives in ../../utils/markdownSanitize so it
+			// is unit-testable in isolation; DOMPurify itself stays lazily loaded.
+			sanitize = (h: string) => sanitizeMarkdownHtml(DOMPurify, h);
 		})();
 
 		return () => mo.disconnect();
@@ -88,7 +91,9 @@
 				const pre = block.parentElement;
 				if (!pre || pre.dataset.shikiDone === 'true') continue;
 
-				const langClass = Array.from(block.classList).find((c) => c.startsWith('language-'));
+				const langClass = Array.from(block.classList).find((c) =>
+					c.startsWith('language-'),
+				);
 				const requested = langClass ? langClass.slice('language-'.length) : 'plaintext';
 
 				await loadLanguage(requested);
@@ -120,8 +125,8 @@
 	});
 </script>
 
+<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 <div bind:this={host} class="md-body" data-theme={isDark ? 'dark' : 'light'}>
-	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html html}
 </div>
 
