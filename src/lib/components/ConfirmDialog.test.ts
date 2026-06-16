@@ -78,4 +78,63 @@ describe('ConfirmDialog', () => {
 		enabled.click();
 		expect(onConfirm).toHaveBeenCalledTimes(1);
 	});
+
+	it('fires onCancel exactly once when the cancel button is clicked', async () => {
+		const onCancel = vi.fn();
+		const onConfirm = vi.fn();
+		render(ConfirmDialog, {
+			props: { open: true, title: 'Proceed?', cancelLabel: 'Cancel', onCancel, onConfirm },
+		});
+		await tick();
+
+		confirmButton('Cancel').click();
+		await tick();
+		expect(onCancel).toHaveBeenCalledTimes(1);
+		expect(onConfirm).not.toHaveBeenCalled();
+	});
+
+	it('does NOT fire onCancel when the confirm button is clicked (no spurious cancel)', async () => {
+		const onCancel = vi.fn();
+		const onConfirm = vi.fn();
+		render(ConfirmDialog, {
+			props: { open: true, title: 'Proceed?', confirmLabel: 'Confirm', onCancel, onConfirm },
+		});
+		await tick();
+
+		confirmButton('Confirm').click();
+		await tick();
+		expect(onConfirm).toHaveBeenCalledTimes(1);
+		expect(onCancel).not.toHaveBeenCalled();
+	});
+
+	it('does not fire onCancel when the caller closes it externally (e.g. after a successful confirm)', async () => {
+		const onCancel = vi.fn();
+		const { rerender } = render(ConfirmDialog, {
+			props: { open: true, title: 'Proceed?', onCancel },
+		});
+		await tick();
+
+		// Simulate the parent setting `open = false` after its async action resolves.
+		await rerender({ open: false });
+		await tick();
+		expect(onCancel).not.toHaveBeenCalled();
+	});
+
+	it('disables the cancel button while busy so the in-flight action owns the dialog', async () => {
+		const onCancel = vi.fn();
+		render(ConfirmDialog, {
+			props: { open: true, title: 'Working…', cancelLabel: 'Cancel', loading: true, onCancel },
+		});
+		await tick();
+
+		const cancel = confirmButton('Cancel');
+		expect(cancel).toBeDisabled();
+		cancel.click();
+		expect(onCancel).not.toHaveBeenCalled();
+	});
+
+	// NOTE: Escape / overlay-click dismissal is bits-ui browser behaviour that
+	// jsdom cannot faithfully simulate (it needs real focus + dismiss handling),
+	// so it is exercised in the Storybook (Chromium) project, not here. The unit
+	// tests above cover OUR logic: the onOpenChange cancel routing + busy guards.
 });
