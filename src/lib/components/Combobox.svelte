@@ -46,7 +46,13 @@
 	const inputValue = $derived(options.find((o) => o.value === value)?.label ?? '');
 </script>
 
-<ComboboxPrimitive.Root type="single" bind:value {inputValue} {disabled} {onValueChange}>
+<ComboboxPrimitive.Root
+	type="single"
+	bind:value
+	{inputValue}
+	{disabled}
+	{onValueChange}
+>
 	<div data-slot="combobox" class={cn('relative w-full', className)}>
 		<ComboboxPrimitive.Input
 			oninput={(e: Event) => (search = (e.currentTarget as HTMLInputElement).value)}

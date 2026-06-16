@@ -29,7 +29,13 @@
 	} & Omit<HTMLButtonAttributes, 'class' | 'aria-label'> &
 		Omit<HTMLAnchorAttributes, 'class' | 'aria-label'>;
 
-	let { href, class: className, alwaysVisible = false, children, ...restProps }: Props = $props();
+	let {
+		href,
+		class: className,
+		alwaysVisible = false,
+		children,
+		...restProps
+	}: Props = $props();
 
 	const base = cn(
 		'fixed right-4 z-40 grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30',

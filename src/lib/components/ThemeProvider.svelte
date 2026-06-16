@@ -79,6 +79,7 @@
 	}
 
 	// Initial value: capture the prop once. Subsequent changes flow through `setTheme`.
+	// eslint-disable-next-line svelte/no-reactive-reassign
 	let theme = $state<Theme>(untrack(() => defaultTheme));
 	let systemPref = $state<ResolvedTheme>('light');
 
@@ -148,6 +149,7 @@
 		setTheme,
 		cycleTheme,
 	});
+
 </script>
 
 {#if children}

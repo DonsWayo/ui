@@ -191,9 +191,7 @@
 		</table>
 	</div>
 	{#if shouldPaginate && total > 0}
-		<div
-			class="border-border bg-muted/30 flex items-center justify-between gap-2 border-t px-3 py-2"
-		>
+		<div class="border-border bg-muted/30 flex items-center justify-between gap-2 border-t px-3 py-2">
 			<span class="text-muted-foreground text-xs">
 				Showing {Math.min((page - 1) * pageSize + 1, total)}–{Math.min(page * pageSize, total)} of
 				{total}

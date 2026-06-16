@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { CheckIcon, CopyIcon } from '@lucide/svelte';
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { cn } from '../utils.js';
 	import {
 		getHighlighter,
@@ -9,6 +9,7 @@
 		SHIKI_LIGHT_THEME,
 		SHIKI_DARK_THEME,
 	} from '../utils/shikiHighlighter.js';
+	import type { ThemeContext } from './ThemeProvider.svelte';
 
 	type Theme = 'light' | 'dark' | 'auto';
 
@@ -55,6 +56,9 @@
 
 	// Read the ThemeProvider context if present. Doesn't throw — CodeBlock
 	// renders just fine outside a ThemeProvider, it just won't auto-switch.
+	const themeCtx = getContext<ThemeContext | undefined>(Symbol.for('@nucel/ui:theme')) as
+		| ThemeContext
+		| undefined;
 	// Note: the ThemeProvider uses its own private symbol; we can't read it
 	// directly. Fall back to inspecting the `.dark` class on <html> at render
 	// time — that's the contract ThemeProvider commits to.
@@ -64,14 +68,19 @@
 		theme === 'light' ? 'light' : theme === 'dark' ? 'dark' : domDark ? 'dark' : 'light',
 	);
 
-	const shikiTheme = $derived(resolvedTheme === 'dark' ? SHIKI_DARK_THEME : SHIKI_LIGHT_THEME);
+	const shikiTheme = $derived(
+		resolvedTheme === 'dark' ? SHIKI_DARK_THEME : SHIKI_LIGHT_THEME,
+	);
 
 	let highlightedHtml = $state<string | null>(null);
+	let highlighterReady = $state(false);
 	let copied = $state(false);
 
 	// Derived snapshot of the props that affect highlighting output. When any
 	// of them change we re-run Shiki.
-	const highlightKey = $derived([code, language, shikiTheme, showLineNumbers ? '1' : '0'].join(''));
+	const highlightKey = $derived(
+		[code, language, shikiTheme, showLineNumbers ? '1' : '0'].join(''),
+	);
 
 	onMount(() => {
 		// Initial dark-class snapshot + observe for ThemeProvider toggles.
@@ -87,6 +96,7 @@
 		// Kick off the highlighter ASAP — subsequent CodeBlocks reuse the cache.
 		(async () => {
 			await getHighlighter();
+			highlighterReady = true;
 		})();
 
 		return () => mo.disconnect();
@@ -112,7 +122,8 @@
 							name: 'nucel:line-attrs',
 							line(node, line) {
 								node.properties = node.properties ?? {};
-								(node.properties as Record<string, string | number>)['data-line'] = line;
+								(node.properties as Record<string, string | number>)['data-line'] =
+									line;
 							},
 						},
 					],
@@ -141,10 +152,6 @@
 	}
 
 	const lines = $derived(code.split('\n'));
-
-	// Literal newline rendered between numbered lines (kept in script so the
-	// template doesn't need a string-literal mustache).
-	const NEWLINE = '\n';
 </script>
 
 <div
@@ -193,8 +200,8 @@
 	>
 		{#if highlightedHtml}
 			<!-- Shiki-rendered output. {@html} is safe here: Shiki escapes all source. -->
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="nucel-code-shiki" class:with-line-numbers={showLineNumbers}>
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				{@html highlightedHtml}
 			</div>
 		{:else}
@@ -207,7 +214,7 @@
 					>{#if showLineNumbers}{#each lines as line, i (i)}<span
 								class="text-muted-foreground/60 mr-4 inline-block w-6 text-right select-none"
 								>{i + 1}</span
-							>{line}{#if i < lines.length - 1}{NEWLINE}{/if}{/each}{:else}{code}{/if}</code
+							>{line}{#if i < lines.length - 1}{'\n'}{/if}{/each}{:else}{code}{/if}</code
 				></pre>
 		{/if}
 	</div>

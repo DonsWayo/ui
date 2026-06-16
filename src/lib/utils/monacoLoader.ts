@@ -25,6 +25,7 @@ let monacoPromise: Promise<typeof MonacoNs> | null = null;
 let themesRegistered = false;
 
 declare global {
+	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface Window {
 		MonacoEnvironment?: {
 			getWorker?: (workerId: string, label: string) => Worker | Promise<Worker>;
@@ -52,33 +53,38 @@ export function loadMonaco(): Promise<typeof MonacoNs> | null {
 					// Vite emits a separate chunk per worker.
 					switch (label) {
 						case 'json': {
-							const { default: WorkerCtor } =
-								await import('monaco-editor/esm/vs/language/json/json.worker?worker');
+							const { default: WorkerCtor } = await import(
+								'monaco-editor/esm/vs/language/json/json.worker?worker'
+							);
 							return new WorkerCtor();
 						}
 						case 'css':
 						case 'scss':
 						case 'less': {
-							const { default: WorkerCtor } =
-								await import('monaco-editor/esm/vs/language/css/css.worker?worker');
+							const { default: WorkerCtor } = await import(
+								'monaco-editor/esm/vs/language/css/css.worker?worker'
+							);
 							return new WorkerCtor();
 						}
 						case 'html':
 						case 'handlebars':
 						case 'razor': {
-							const { default: WorkerCtor } =
-								await import('monaco-editor/esm/vs/language/html/html.worker?worker');
+							const { default: WorkerCtor } = await import(
+								'monaco-editor/esm/vs/language/html/html.worker?worker'
+							);
 							return new WorkerCtor();
 						}
 						case 'typescript':
 						case 'javascript': {
-							const { default: WorkerCtor } =
-								await import('monaco-editor/esm/vs/language/typescript/ts.worker?worker');
+							const { default: WorkerCtor } = await import(
+								'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+							);
 							return new WorkerCtor();
 						}
 						default: {
-							const { default: WorkerCtor } =
-								await import('monaco-editor/esm/vs/editor/editor.worker?worker');
+							const { default: WorkerCtor } = await import(
+								'monaco-editor/esm/vs/editor/editor.worker?worker'
+							);
 							return new WorkerCtor();
 						}
 					}
