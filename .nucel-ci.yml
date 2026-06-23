@@ -1,0 +1,49 @@
+name: ci
+
+# Runs on every push to main and every pull request targeting main.
+# @nucel/ui component library — typecheck, lint, and unit tests.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+image: imbios/bun-node:latest-20-debian
+
+concurrency:
+  group: ui-ci-${{ nucel.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    steps:
+      - name: install deps
+        run: bun install --frozen-lockfile
+      - name: prettier format check
+        run: bun run format:check
+      - name: eslint
+        run: bun run lint
+      - name: svelte-check (typecheck)
+        run: bun run check
+
+  test:
+    needs: [lint]
+    steps:
+      - name: install deps
+        run: bun install --frozen-lockfile
+      - name: vitest
+        run: bun run test
+
+  build:
+    needs: [lint]
+    steps:
+      - name: install deps
+        run: bun install --frozen-lockfile
+      - name: build library
+        run: bun run build
+      - name: verify dist
+        run: |
+          test -d dist || { echo "dist/ missing after build"; exit 1; }
+          test -f dist/index.js || { echo "dist/index.js missing"; exit 1; }
+          echo "dist OK: $(ls dist | wc -l) files"
