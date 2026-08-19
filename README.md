@@ -109,9 +109,22 @@ the difference is worth knowing before you install:
   The same probe against `0.21.0` installs no `monaco-editor` at all, so add it
   yourself if you use the editors.
 
-The entry-point split described below still holds on `0.25.0`: the main barrel
-has no import path to Monaco, so it stays out of the bundle. The hard dependency
-is an install-size cost, not a bundle-size one.
+The entry-point split described below is another axis of that divergence, and it
+cuts the other way: keeping the editors **out** of the main barrel exists only in
+this tree. Published `0.25.0` does have the `./monaco` and `./editor` subpaths,
+but as _additional_ entries — its main barrel still exports the editors too.
+`package/src/lib/index.ts` in the `0.25.0` tarball exports `CodeEditor`,
+`DiffEditor`, `ThreeWayMerge`, `loadMonaco` and `resolveMonacoTheme` (lines
+326-338) alongside `RichEditor` (line 431).
+
+So on `latest` the barrel does have an import path to Monaco: `index.ts:328`
+re-exports `./components/CodeEditor.svelte`, whose line 5 is a static
+`import { loadMonaco, resolveMonacoTheme } from '../utils/monacoLoader.js'`, and
+`utils/monacoLoader.ts:95` does `await import('monaco-editor')`, with the
+`?worker` dynamic imports on lines 56-85 above it. That is the arrangement the section below describes as pulling
+Monaco into every consumer's optimize pass — so on `0.25.0` the hard dependency
+is not only an install-size cost. This tree's barrel has no such path
+(`src/lib/index.ts:315-319` is the comment recording the move).
 
 ### Styles
 
@@ -203,6 +216,10 @@ bloats consumer builds.**
 | `@nucel/ui`        | Everything except the editors — 175 exported names                              |
 | `@nucel/ui/monaco` | `CodeEditor`, `DiffEditor`, `ThreeWayMerge`, `loadMonaco`, `resolveMonacoTheme` |
 | `@nucel/ui/editor` | `RichEditor` (Tiptap)                                                           |
+
+That table describes this tree. Published `0.25.0` exposes the same three
+specifiers, but its `@nucel/ui` barrel also exports the editors, so the rest of
+this section explains a property only this tree currently has.
 
 ### Why Monaco is a separate entry
 
