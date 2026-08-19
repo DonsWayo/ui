@@ -121,10 +121,11 @@ So on `latest` the barrel does have an import path to Monaco: `index.ts:328`
 re-exports `./components/CodeEditor.svelte`, whose line 5 is a static
 `import { loadMonaco, resolveMonacoTheme } from '../utils/monacoLoader.js'`, and
 `utils/monacoLoader.ts:95` does `await import('monaco-editor')`, with the
-`?worker` dynamic imports on lines 56-85 above it. That is the arrangement the section below describes as pulling
-Monaco into every consumer's optimize pass — so on `0.25.0` the hard dependency
-is not only an install-size cost. This tree's barrel has no such path
-(`src/lib/index.ts:315-319` is the comment recording the move).
+`?worker` dynamic imports on lines 56-85 above it. That is the arrangement the
+section below describes as pulling Monaco into every consumer's optimize pass —
+so on `0.25.0` the hard dependency is not only an install-size cost. This tree's
+barrel has no such path (`src/lib/index.ts:315-319` is the comment recording the
+move).
 
 ### Styles
 
