@@ -96,9 +96,22 @@ Peer dependencies:
 bun add svelte@^5 tailwindcss@^4
 ```
 
-`monaco-editor` is an optional peer dependency, needed only if you import the
-`@nucel/ui/monaco` entry point. (Note: `0.25.0` as published omits it from
-`peerDependencies` entirely — install it explicitly if you use the editors.)
+`monaco-editor` is declared differently on npm `latest` than in this tree, and
+the difference is worth knowing before you install:
+
+- **npm `latest` (`0.25.0`)** moved it into hard `dependencies` as
+  `monaco-editor@^0.55.1`. Every consumer gets it whether or not they ever
+  import `@nucel/ui/monaco` — 75 MB unpacked. You do not need to install it
+  yourself. Verified with `bun add @nucel/ui@0.25.0` in an empty project:
+  `node_modules/monaco-editor` lands at `0.55.1`.
+- **This tree and published `0.21.0`** declare it as an _optional_ peer
+  (`^0.52.0 || ^0.55.0`, with `peerDependenciesMeta.monaco-editor.optional`).
+  The same probe against `0.21.0` installs no `monaco-editor` at all, so add it
+  yourself if you use the editors.
+
+The entry-point split described below still holds on `0.25.0`: the main barrel
+has no import path to Monaco, so it stays out of the bundle. The hard dependency
+is an install-size cost, not a bundle-size one.
 
 ### Styles
 
@@ -109,11 +122,55 @@ components render against. Import it once, at the top of your app CSS:
 @import '@nucel/ui/styles.css';
 ```
 
-It defines raw semantic tokens (`--bg`, `--fg`, `--fg-muted`, `--success`,
+It pulls in `tailwindcss` itself, so do not import Tailwind again alongside it,
+and it defines raw semantic tokens (`--bg`, `--fg`, `--fg-muted`, `--success`,
 `--warning`, `--danger`, …) on `:root` with dark values under `.dark`, maps them
 into Tailwind utilities through `@theme inline`, and keeps the legacy shadcn
 token names (`--background`, `--foreground`, `--primary`, …) aliased so existing
 `bg-background` / `text-foreground` classes keep working.
+
+#### You also need an `@source` line
+
+The stylesheet carries tokens only. It does not tell Tailwind where the classes
+the components use actually live, and Tailwind v4's automatic content detection
+skips `node_modules` — so any utility that appears only inside `@nucel/ui`
+source, and nowhere in your own markup, is never generated. Point Tailwind at
+the installed package too:
+
+```css
+@import '@nucel/ui/styles.css';
+@source './node_modules/@nucel/ui/src/lib';
+```
+
+`@source` resolves relative to the CSS file it appears in, which is why the
+package cannot ship one for you — the path above assumes the CSS file sits at
+the project root. `nucel/frontend/src/app.css` uses
+`@source "../node_modules/@nucel/ui/src"`; `web/src/routes/layout.css` uses
+`@source '../../node_modules/@nucel/ui/src/lib'`.
+
+Omitting it does not error, it just yields components with missing styles. In
+`nucel/frontend` that silently dropped `focus-visible:ring-[3px]` from `<Input>`
+and `<Textarea>`, so keyboard users got no focus ring at all (fixed as NUC-062).
+Measured on a clean `0.25.0` install: the same CSS entry compiles to 14 KB
+without the `@source` line and 162 KB with it, and not one `ring-*` utility is
+emitted without it.
+
+#### `@import '@nucel/ui/styles.css'` is broken on `0.25.0`
+
+The shipped `src/styles.css` starts with `@import 'tailwindcss'` and
+`@import 'tw-animate-css'`, but `0.25.0` dropped `tw-animate-css` from
+`dependencies` (this tree still has it, at `^1.4.0`). On a clean `0.25.0`
+install the import fails to resolve:
+
+```
+Error: Can't resolve 'tw-animate-css' in '…/node_modules/@nucel/ui/src'
+```
+
+Add `tw-animate-css` to your own dependencies as a workaround. This is the same
+class of problem as the sanitizer regression above: a published version that
+does not match the tree it was cut from. Neither consumer hit it, because
+neither actually imports `@nucel/ui/styles.css` — both inline their own copy of
+the token blocks, which is its own drift worth closing.
 
 Dark mode is driven by a `.dark` class on an ancestor element. `<ThemeProvider>`
 manages that class, persists the preference to `localStorage`, and follows
@@ -178,37 +235,71 @@ suggestion. Re-exporting it from the main barrel dragged the entire
 Tiptap/ProseMirror graph — roughly 400–700 KB — into every consumer's bundle.
 Same failure class as Monaco, but silent: it bloats instead of erroring.
 
-### Known issue: `?worker` breaks consumers' browser-mode test bundlers
+### Known issue: `?worker` breaks consumers' dependency pre-bundlers
 
-This one is unfixed upstream and consumers have to work around it.
+This one is unfixed upstream and consumers have to work around it, in their app
+config as well as their test config.
 
-The `?worker` suffix is Vite dev/build sugar. It is **not** rewritten by
-vitest's browser-mode dependency pre-bundler, which runs before the user plugin
-pipeline. Any consumer that imports `@nucel/ui/monaco` (directly or
-transitively) from a browser-mode vitest project hits:
+The `?worker` suffix is Vite transform-pipeline sugar. It is **not** rewritten
+by a dependency pre-bundler, which runs _before_ the user plugin pipeline. Two
+pre-bundlers hit it:
+
+- **vitest browser mode.** Any consumer that imports `@nucel/ui/monaco`
+  (directly or transitively) from a browser-mode project fails to load the
+  module graph, so the suite cannot start.
+- **`vite dev` on Vite 8.** The rolldown pre-optimizer resolves the literal
+  `…worker.js?worker` path, which does not exist on disk, and the dev server
+  crashes in dependency optimization.
+
+Both surface as:
 
 ```
 UNLOADABLE_DEPENDENCY: Could not load …/ts.worker.js?worker
 ```
 
-and the whole module graph fails to load — the suite cannot start. It is sneaky
-because `vite build` and `svelte-check` both pass; only the test bundler chokes,
-and only in browser-mode projects.
+It is sneaky because `vite build` and `svelte-check` both pass — only the
+pre-bundlers choke.
 
-Consumer workaround, test config only (see `web/vitest.config.ts` in the `web`
-repo for a working copy):
+Consumer workaround, in the app's `vite.config.ts`:
 
-1. A small Vite plugin that resolves any `*?worker` id to an inert `Worker`
-   class stub.
-2. `optimizeDeps.exclude: ['@nucel/ui', 'monaco-editor']` on **every**
-   browser-mode project, so those modules go through the plugin pipeline instead
-   of being pre-bundled. A project-level `plugins` array overrides the root one,
-   so the stub plugin has to be re-listed per project.
+1. `optimizeDeps.exclude: ['@nucel/ui', 'monaco-editor']`, so those modules go
+   through the normal transform pipeline (which rewrites `?worker` correctly)
+   instead of being pre-bundled. Both `web/vite.config.ts` and
+   `nucel/frontend/vite.config.ts` carry exactly this.
+2. Optionally a small `enforce: 'pre'` plugin that resolves any `*?worker` id to
+   an inert `Worker` class stub, scoped with `apply: 'serve'` so the production
+   build keeps Vite's real `?worker` transform. `web/vite.config.ts` has one
+   (`stubWorkerImports`).
+
+And again in `vitest.config.ts` for browser-mode projects — `web/vitest.config.ts`
+is a working copy. The same two pieces, with one extra wrinkle: a project-level
+`plugins` array overrides the root one, so the stub plugin has to be re-listed
+per project, and `optimizeDeps.exclude` has to be set on **every** browser-mode
+project rather than once at the root.
 
 The proper fix belongs here, not in every consumer: construct the workers behind
 a function call so no `?worker` specifier is statically reachable from module
 scope. Splitting Monaco into its own subpath (done) reduced the blast radius to
 consumers who actually use the editors; it did not remove the problem for them.
+
+### Known issue: duplicate Tiptap/ProseMirror instances
+
+Consumers that render `RichEditor` _and_ import Tiptap themselves need a second
+workaround, because this package ships raw Svelte source. Its `@tiptap/*`
+imports resolve through the main resolver while the app's own resolve to
+pre-bundled chunks, which yields two `prosemirror-model` instances — and every
+cross-instance document operation dies with:
+
+```
+RangeError: Can not convert <> to a Fragment
+```
+
+`nucel/frontend/vite.config.ts` works around it by listing the editor graph in
+both `resolve.dedupe` (`@tiptap/core`, `@tiptap/pm`, `@tiptap/suggestion`,
+`prosemirror-model`, `prosemirror-state`, `prosemirror-view`,
+`prosemirror-transform`) and `optimizeDeps.exclude` (the same plus
+`@tiptap/starter-kit` and every `@tiptap/extension-*` in use), so both sides go
+through one resolver. `web` does not need it — it does not use `RichEditor`.
 
 ---
 
@@ -245,8 +336,12 @@ DOMPurify — read the sanitizer note above).
 **Layout and navigation** — `PageHeader`, `Section`/`SectionTitle`, `TabBar`,
 `Backdrop`, `VerticalSeparator`, `KbdShortcut`, `Kanban{Board,Column,Card}`.
 
-**Mobile primitives** — `BottomSheet` and `Fab`, both defaulting to `md:hidden`
-so desktop layouts are untouched.
+**Mobile primitives** — `BottomSheet` and `Fab`. Only `Fab` hides itself on
+desktop: it composes `md:hidden` into its class list unless you pass
+`alwaysVisible`. `BottomSheet` has no responsive behaviour of its own — it is a
+`Sheet` with `side="bottom"`, a grabber handle and a safe-area inset, and it
+renders at every width. Wrap its trigger in your own `md:hidden` element if
+desktop should keep a dropdown instead.
 
 **Editors** (separate entries, see above) — `CodeEditor`, `DiffEditor`,
 `ThreeWayMerge`, `RichEditor`.
@@ -297,11 +392,23 @@ components, no API client, no Nucel server calls. The coupling runs the other
 way, and only through npm.
 
 Per project convention, reusable Svelte components belong **here**, not in
-`nucel/frontend/src/lib/ui`. That directory does still hold local copies of
-`Switch`, `Checkbox`, `Radio`, `StatCard`, `EmptyState`, `Skeleton` and the
-Kanban pieces — because the upstream `Switch` and `Checkbox` lack an `ariaLabel`
-prop and a few APIs have not been reconciled. Adding `ariaLabel` upstream is
-what unblocks deleting those copies.
+`nucel/frontend/src/lib/ui`. That directory is a long way from that convention:
+it holds 44 `.svelte` files and 37 of them share a filename with a component
+published in `@nucel/ui@0.25.0`. Not only the primitives (`Switch`, `Checkbox`,
+`Radio`, `Skeleton`, `StatCard`, `EmptyState`, the Kanban pieces) but the entire
+domain set the drift section above lists as present in `0.25.0` —
+`ActivityFeed`, `FileTree`, `JobDag`, `MissionRow`, `PrRow`, `PrStateBadge`,
+`ReviewThread`, `RepoHeader`, `StatusChecksList`, `StepTimeline`, `Timeline`,
+`CloneMenu` — and `CodeEditor` and the filter bars on top of that. Only 7 of the
+44 have no same-named component upstream.
+
+The reasons recorded in the copies are stale: `Switch.svelte` says it exists
+because "the installed @nucel/ui (0.10.0) does not export a Switch",
+`Checkbox.svelte` cites `v0.3.0`. `0.25.0` exports both, and its `Switch`
+already has the `ariaLabel` prop. So this is not one missing prop away from
+resolution — it is an unreconciled fork, and closing it means diffing 37 pairs
+of files. The `ariaLabel` gap that genuinely remains is on `Checkbox` and
+`Radio` (missing in both trees) and on this tree's `Switch`.
 
 ---
 
@@ -327,12 +434,19 @@ mise exec -- bun install
 
 ### Current state of those commands on `main`
 
-Verified by running each in a clean checkout of `main` (`31fff88`). Two of them
-fail, and it is pre-existing debt rather than anything you broke:
+Verified by running each against the code on `main` (`31fff88`; this branch
+changes nothing but `README.md`). Two of them fail, and it is pre-existing debt
+rather than anything you broke:
 
 - `bun run check` — **passes.** 0 errors, 6 warnings (three `state_referenced_locally`
   in `Fab` / `ReactionBar`, three a11y warnings in `RichEditor`).
-- `bun run build` — **passes.** Emits 127 files into `dist/`.
+- `bun run build` — **passes.** Emits 127 files into `dist/`. The library entry
+  is `dist/ui.js`, not `dist/index.js` — see CI below.
+- `bun run dev` — **passes.** Vite 8 dev server on :5173, with an experimental
+  `vite-plugin-svelte` banner about rolldown.
+- `bun run storybook` — **passes.** Serves on :6006.
+- `bun run build-storybook` — **passes.** Emits 215 files into
+  `storybook-static/`.
 - `bun run test` — the `unit` project **passes** (2 files, 17 tests: the
   `markdownSanitize` payload suite and the `ConfirmDialog` cancel-semantics
   suite). The `storybook` project drives 44 stories through real Chromium and
@@ -343,12 +457,14 @@ fail, and it is pre-existing debt rather than anything you broke:
   ```
 
   Without that, `bun run test` exits non-zero even though the unit tests passed.
+  Only the `unit` project has been run green here; the story suite has not.
 
 - `bun run lint` — **fails**: 23 errors, 4 warnings across 13 files. Mostly
   `no-explicit-any` in the Tiptap glue (`mention-suggestion.ts`,
   `slash-commands.ts`) plus a handful of unused vars and `{@html}` warnings.
   Known, deliberately deferred debt.
-- `bun run format:check` — **fails**: 57 files, almost all under `src/stories/`.
+- `bun run format:check` — **fails**: 57 files. It is mostly library source, not
+  stories: 48 under `src/lib/`, 8 under `src/stories/`, plus `package.json`.
 
 ### Testing
 
@@ -375,8 +491,10 @@ CI file is easy to mistake for a working gate:
 - On the deployed Nucel instance, the CI worker never starts. `NUCEL_CI_K8S_URL`
   is unset and there is no Docker socket in the server pod, so no pipeline
   executes at all.
-- Even with an executor, the `lint` job fails on `main` (see above), and `test`
-  and `build` both `needs: [lint]`, so nothing downstream would run.
+- Even with an executor, the `lint` job fails on `main` (see above) at its very
+  first step: it runs `format:check` before `eslint` and `check`, so it stops on
+  the 57 unformatted files and never reaches the other two. `test` and `build`
+  both `needs: [lint]`, so nothing downstream would run either.
 - The `test` job runs `bun run test` without installing Playwright browsers.
 - The `build` job's verify step checks for `dist/index.js`, but `vite build`
   emits `dist/ui.js` — the library entry is named after the package. That check
@@ -443,9 +561,10 @@ Component conventions:
 - Merge classes with the exported `cn()` helper and accept a `class` prop.
 - Anything touching `window` must be SSR-safe — guard with
   `typeof window === 'undefined'` or do the work in `onMount`.
-- Interactive components need an accessible name. `ariaLabel` props are the
-  current gap keeping consumers on local copies; new components should not
-  repeat it.
+- Interactive components need an accessible name. `Checkbox` and `Radio` have no
+  `ariaLabel` prop in either this tree or `0.25.0`, and this tree's `Switch` is
+  missing the one `0.25.0` already ships. New components should not repeat the
+  gap.
 
 ## License
 
